@@ -22,9 +22,9 @@
   .promo {@apply flex min-h-10 flex-wrap items-center justify-center gap-x-1 bg-brand px-3 py-2 text-center text-sm text-white;}
   .promo a {@apply ml-3 font-semibold;}
   .site-header {@apply sticky top-0 z-20 flex min-h-[69px] items-center justify-between gap-4 bg-white px-[1.75%] shadow-sm;}
-  .brand {@apply inline-flex shrink-0 items-center gap-1.5 text-xl font-semibold leading-none tracking-tight;}
-  .brand svg {@apply text-brand;}
-  .brand small {@apply mt-1 block text-[9px] tracking-[.28em];}
+  .brand {@apply inline-flex shrink-0 overflow-hidden rounded-md;}
+  .brand img {@apply h-auto w-[150px] sm:w-[165px];}
+  footer .brand img {@apply w-[200px];}
   .planner {@apply hidden shrink-0 items-center gap-1.5 rounded-full border border-blue-100 px-3 py-1 text-sm text-slate-700 sm:inline-flex;}
   .planner svg {@apply text-brand;}
   .nav {@apply hidden items-center gap-7 lg:flex;}

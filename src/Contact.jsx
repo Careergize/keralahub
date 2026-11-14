@@ -16,7 +16,7 @@ const questions = [
 export default function Contact(){
   const [status,setStatus]=useState('');
   const requestedDestination = new URLSearchParams(window.location.search).get('destination');
-  const initialDestination = internationalDestinations.includes(requestedDestination) ? requestedDestination : '';
+  const initialDestination = [...internationalDestinations,...Object.values(regions).flat()].includes(requestedDestination) ? requestedDestination : '';
 
   function downloadEnquiry(event){
     event.preventDefault();

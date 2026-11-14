@@ -6,6 +6,7 @@ import './style.css';
 import Contact from './Contact';
 import Holidays from './Holidays';
 import Visa from './Visa';
+import Hotels from './Hotels';
 import HomeOffers from './HomeOffers';
 import TopDestinations from './TopDestinations';
 import TravelBenefits from './TravelBenefits';
@@ -14,6 +15,8 @@ import {destinationPhotos} from './destinationPhotos';
 const isContact = ['/contact','/contact/'].includes(window.location.pathname);
 const isHolidays = ['/holidays','/holidays/'].includes(window.location.pathname);
 const isVisa = ['/visa-category','/visa-category/'].includes(window.location.pathname);
+const isHotels = ['/hotel','/hotel/'].includes(window.location.pathname);
+if (isHotels) document.title = 'Hotels | Kerala Hub Holidays';
 if (isVisa) document.title = 'Visa Processing | Kerala Hub Holidays';
 if (isContact) document.title = 'Contact Us | Kerala Hub Holidays';
 if (isHolidays) document.title = 'Vacation Packages | Kerala Hub Holidays';
@@ -23,7 +26,7 @@ const photos = [4,2,5,1,6,9,7,8].map((n) => asset('package-details-gallery-img'+
 const links = [['Home','#home'],['Destination','#destinations'],['Pages','#about'],['Holidays','/holidays/'],['Contact','/contact/']];
 
 function Brand(){
-  return <a href="/#home" className="brand"><Compass size={30}/><span>Kerala Hub<small>HOLIDAYS</small></span></a>;
+  return <a href="/#home" className="brand"><img src="/kerala-hub-logo.png" width="346" height="105" alt="Kerala Hub Holidays"/></a>;
 }
 
 function TourCard({tour, onOpen}){
@@ -74,12 +77,12 @@ function App(){
     <div id="home" className="promo">Explore our <strong>Kerala Honeymoon Tours.</strong> <a href="/#packages" onClick={()=>setFilter({category:'Honeymoon'})}>See Details ›</a></div>
     <header className="site-header">
       <Brand/>
-      <nav className={menu?'nav open':'nav'} aria-label="Main navigation">{links.map(([label,href],i)=>label==='Pages'?<details className='pages-dropdown relative' key={label} onKeyDown={event=>{if(event.key==='Escape'){event.currentTarget.open=false;event.currentTarget.querySelector('summary').focus();}}}><summary className={isVisa?'active':''}>Pages <ChevronDown size={13}/></summary><div><a href='/#about'>About Us</a><a href='/visa-category/' aria-current={isVisa?'page':undefined}>Visa</a></div></details>:<a key={href} href={href.startsWith("#")?"/"+href:href} onClick={()=>setMenu(false)} className={i===(isVisa?-1:isContact?4:isHolidays?3:0)?'active':''}>{label}{[1,2].includes(i)&&<ChevronDown size={13}/>}</a>)}</nav>
+      <nav className={menu?'nav open':'nav'} aria-label="Main navigation">{links.map(([label,href],i)=>label==='Pages'?<details className='pages-dropdown relative' key={label} onKeyDown={event=>{if(event.key==='Escape'){event.currentTarget.open=false;event.currentTarget.querySelector('summary').focus();}}}><summary className={isVisa||isHotels?'active':''}>Pages <ChevronDown size={13}/></summary><div><a href='/#about'>About Us</a><a href='/visa-category/' aria-current={isVisa?'page':undefined}>Visa</a><a href='/hotel/' aria-current={isHotels?'page':undefined}>Hotels</a></div></details>:<a key={href} href={href.startsWith("#")?"/"+href:href} onClick={()=>setMenu(false)} className={i===(isVisa||isHotels?-1:isContact?4:isHolidays?3:0)?'active':''}>{label}{[1,2].includes(i)&&<ChevronDown size={13}/>}</a>)}</nav>
       <div className="header-actions"><span><Globe size={17}/> INR</span><button aria-label="Open trip planner" onClick={()=>plan()}><CircleUser size={19}/></button><a className="pill" href="/contact/"><MessageCircle size={17}/> Contact Us</a></div>
       <button className="mobile-toggle" aria-label="Toggle navigation" aria-expanded={menu} onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button>
     </header>
 
-    {isVisa?<Visa/>:isContact?<Contact/>:isHolidays?<Holidays photos={photos} renderTour={tour=><TourCard key={tour.title} tour={tour} onOpen={tour=>setDialog({kind:'tour',tour})}/>}/>:<main>
+    {isHotels?<Hotels/>:isVisa?<Visa/>:isContact?<Contact/>:isHolidays?<Holidays photos={photos} renderTour={tour=><TourCard key={tour.title} tour={tour} onOpen={tour=>setDialog({kind:'tour',tour})}/>}/>:<main>
       <section className="hero">
         <video src={asset('travel-agency-banner-video.mp4')} autoPlay muted loop playsInline aria-hidden="true"/>
         <div className="hero-content">
@@ -147,9 +150,34 @@ function App(){
         <div className="cards">{experiences.map(tour=><TourCard key={tour.title} tour={tour} onOpen={tour=>setDialog({kind:'tour',tour})}/>)}</div>
       </section>
 
-      <section className="section travel-guide" id="inspiration"><div className="wrap"><div className="section-head"><h2>Travel Inspirations</h2><p>Ideas for your next Kerala holiday.</p></div><div className="cards">
-        {experiences.map((item,i)=><article className="journal" key={item.title}><img src={photos[i+3]} alt="" loading="lazy"/><div className="p-5"><h3>{['What to expect on a backwater cruise','Planning a trip to Munnar’s tea country','A walking guide to Fort Kochi'][i]}</h3><button className="text-blue-700 mt-4 font-semibold" onClick={()=>setDialog({kind:'tour',tour:item})}>Read More →</button></div></article>)}
-      </div></div></section>
+      <section className="section" id="inspiration" aria-labelledby="inspiration-heading">
+        <div className="wrap">
+          <div className="mb-8 md:mb-14">
+            <p className="mb-2 text-sm font-semibold text-brand">Get to know more with Kerala hub</p>
+            <h2 id="inspiration-heading">Travel Tips &amp; Inspirations.</h2>
+          </div>
+          <div className="cards">
+            {experiences.map((item,i)=>{
+              const title=['What to expect on a backwater cruise','Planning a trip to Munnar’s tea country','A walking guide to Fort Kochi'][i];
+              const tip=[
+                'Ask which canals the route covers and whether meals are included. A daytime cruise works well for a short visit, while an overnight stay gives you more time on the water.',
+                'Leave time for a tea estate visit and a tasting. Pack a light layer for cooler mornings and check whether the estate requires advance booking.',
+                'Start near the Chinese fishing nets, then walk toward St. Francis Church and the heritage streets. An early start gives you time to explore before the midday heat.',
+              ][i];
+              const photo=destinationPhotos[item.places[0]];
+              return <article key={item.title}>
+                <div className="relative overflow-hidden rounded-2xl bg-neutral-100">
+                  <img src={photo.src} alt={photo.alt} loading="lazy" className="h-[280px] w-full object-cover"/>
+                  <span className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-medium"><MapPin size={15}/> {item.places[0]}</span>
+                </div>
+                <h3 className="mt-4 text-xl">{title}</h3>
+                <button className="outline mt-4" aria-label={'Read more about '+title} onClick={()=>setDialog({kind:'tour',tour:{...item,title,detail:tip}})}>Read More <ArrowRight size={16}/></button>
+                <p className="mt-3 text-xs text-neutral-500">Photo by <a className="underline" href={photo.source}>{photo.author}</a> · <a className="underline" href={'https://creativecommons.org/licenses/'+photo.license+'/'}>CC {photo.license.replace('/',' ').toUpperCase()}</a></p>
+              </article>;
+            })}
+          </div>
+        </div>
+      </section>
       <div className="gallery" aria-label="Travel gallery">{[1,2,3,4,5].map(i=><button key={i} aria-label={'Open gallery image '+i} onClick={()=>setDialog({kind:'image',image:i})}><img src={asset('gallery-img-'+i+'.webp')} alt="" loading="lazy"/></button>)}</div>
     </main>}
 
