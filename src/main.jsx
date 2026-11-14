@@ -8,6 +8,7 @@ import Holidays from './Holidays';
 import Visa from './Visa';
 import HomeOffers from './HomeOffers';
 import TopDestinations from './TopDestinations';
+import TravelBenefits from './TravelBenefits';
 import {destinationPhotos} from './destinationPhotos';
 
 const isContact = ['/contact','/contact/'].includes(window.location.pathname);
@@ -126,6 +127,8 @@ function App(){
           {[2,3,1].map((image,index)=><img key={image} src={'https://atlastrip-wp.egenstheme.com/wp-content/uploads/2026/07/about-img'+image+'.webp'} alt="" loading="lazy" className={'absolute object-cover shadow-lg '+['left-[2%] top-[12%] h-[77%] w-[46%] -rotate-8 rounded-2xl','right-[2%] top-[12%] h-[77%] w-[46%] rotate-8 rounded-2xl','left-[29%] top-[5%] h-[90%] w-[42%] rounded-2xl border-4 border-white'][index]}/>)}
         </div>
       </section>
+      <TravelBenefits/>
+
       <section className="wrap section" id="packages" ref={searchRef}>
         <div className="section-head"><h2>{filter?.mode==='Experience'?'Travel Experiences':'Featured Travel Packages'}</h2><button className="outline" onClick={()=>setFilter(null)}>View all packages <ArrowRight size={16}/></button></div>
         {filter&&<p className="mb-5 text-neutral-600" role="status">{results.length} matching {results.length===1?'itinerary':'itineraries'}{filter.destination?' in '+filter.destination:''}{date?' for your trip on '+date:''}.</p>}
