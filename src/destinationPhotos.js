@@ -42,3 +42,30 @@ export const destinationPhotos = {
     "alt": "Edakkal Caves in Wayanad"
   }
 };
+
+export const internationalPhotos = {
+  "Morocco": {
+    "author": "P. Hughes",
+    "license": "by/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Morocco_-_View_of_Chefchaouen.jpg",
+    "src": "https://upload.wikimedia.org/wikipedia/commons/5/5b/Morocco_-_View_of_Chefchaouen.jpg"
+  },
+  "Jordan": {
+    "author": "David Bjorgen",
+    "license": "by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Petra_Treasury.jpg",
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b9/Petra_Treasury.jpg"
+  },
+  "Vietnam": {
+    "author": "Juanjo Bazan",
+    "license": "by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:HalongBay.jpg",
+    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b8/HalongBay.jpg"
+  },
+  "Saudi Arabia": {
+    "author": "KHAWAJA UMER FAROOQ",
+    "license": "by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Madain_Saleh_8.jpg",
+    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Madain_Saleh_8.jpg"
+  }
+};

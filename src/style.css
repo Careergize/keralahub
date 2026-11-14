@@ -2,13 +2,16 @@
 @import 'tailwindcss';
 
 @theme {
+  --color-brochure-plum: #372b41;
+  --color-brochure-lavender: #f4eef7;
+  --color-brochure-gold: #f6d761;
   --color-brand: #0668e8;
   --font-sans: 'Poppins', 'DM Sans', sans-serif;
 }
 
 @layer base {
   html {scroll-behavior:smooth;scroll-padding-top:90px}
-  body {@apply font-sans text-neutral-900;}
+  body {@apply bg-brochure-lavender font-sans text-neutral-900;}
   button, select {@apply cursor-pointer;}
   h2 {@apply text-3xl font-semibold tracking-tight md:text-[42px] md:leading-tight;}
   h3 {@apply text-lg font-semibold;}
@@ -21,7 +24,7 @@
   .outline {@apply inline-flex w-fit items-center gap-2 rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium hover:border-brand hover:text-brand;}
   .promo {@apply flex min-h-10 flex-wrap items-center justify-center gap-x-1 bg-brand px-3 py-2 text-center text-sm text-white;}
   .promo a {@apply ml-3 font-semibold;}
-  .site-header {@apply sticky top-0 z-20 flex min-h-[69px] items-center justify-between gap-4 bg-white px-[1.75%] shadow-sm;}
+  .site-header {@apply sticky top-0 z-20 flex min-h-[69px] items-center justify-between gap-4 bg-brochure-plum px-[1.75%] text-white shadow-sm;}
   .brand {@apply inline-flex shrink-0 overflow-hidden rounded-md;}
   .brand img {@apply h-auto w-[150px] sm:w-[165px];}
   footer .brand img {@apply w-[200px];}
@@ -33,7 +36,7 @@
   .header-actions {@apply ml-auto hidden shrink-0 items-center gap-5 text-sm lg:ml-0 lg:flex;}
   .header-actions span {@apply flex items-center gap-2;}
   .mobile-toggle {@apply ml-auto rounded-lg p-2 lg:hidden;}
-  .nav.open {@apply absolute inset-x-0 top-full flex flex-col items-start gap-5 border-t bg-white p-6 shadow-lg lg:static lg:flex-row lg:items-center lg:gap-7 lg:border-0 lg:p-0 lg:shadow-none;}
+  .nav.open {@apply absolute inset-x-0 top-full flex flex-col items-start gap-5 border-t border-white/20 bg-brochure-plum p-6 shadow-lg lg:static lg:flex-row lg:items-center lg:gap-7 lg:border-0 lg:p-0 lg:shadow-none;}
   .hero {@apply relative isolate min-h-[580px] overflow-hidden bg-[#062b3b] text-center text-white md:min-h-[660px];}
   .hero video {@apply absolute inset-0 -z-20 h-full w-full object-cover;}
   .hero::after {@apply absolute inset-0 -z-10 bg-black/30 content-[''];}
@@ -96,7 +99,7 @@
   .gallery {@apply grid grid-cols-2 sm:grid-cols-5;}
   .gallery img {@apply aspect-[4/3] w-full object-cover;}
   .gallery button:last-child {@apply hidden sm:block;}
-  footer {@apply bg-[#072231] py-12 text-white;}
+  footer {@apply bg-brochure-plum py-12 text-white;}
   .newsletter {@apply grid items-center gap-6 border-b border-white/20 pb-9 lg:grid-cols-2;}
   .newsletter h2 {@apply mb-2 text-2xl md:text-3xl;}
   .newsletter form {@apply flex flex-wrap gap-2;}
@@ -123,4 +126,18 @@
   .pages-dropdown summary::-webkit-details-marker {display:none;}
   .pages-dropdown > div {@apply mt-2 min-w-40 rounded-xl border border-neutral-200 bg-white p-2 shadow-lg lg:absolute lg:left-0 lg:top-full;}
   .pages-dropdown a {@apply rounded-lg px-3 py-2 hover:bg-blue-50;}
+}
+
+@layer components {
+  .site-header .nav > a:hover,
+  .site-header .nav .active,
+  .site-header .pages-dropdown summary:hover {
+    @apply text-brochure-gold;
+  }
+  .site-header .pages-dropdown > div {
+    @apply border-white/20 bg-brochure-plum;
+  }
+  .site-header .pages-dropdown a:hover {
+    @apply bg-white/10 text-brochure-gold;
+  }
 }

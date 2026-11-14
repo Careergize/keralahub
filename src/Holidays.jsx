@@ -1,12 +1,13 @@
 import React, {useRef, useState} from 'react';
 import {ArrowRight, ChevronLeft, ChevronRight} from 'lucide-react';
-import {asset, experiences, tours} from './data';
+import {experiences, tours} from './data';
+import {destinationPhotos, internationalPhotos} from './destinationPhotos';
 import './holidays.css';
 
 const themes = [
-  ['Family Holidays','Bring the family together for tea estates, backwaters and beach days.','Family Tour',1],
-  ['Honeymoon Escapes','Pair quiet hill-station stays with a private houseboat cruise.','Honeymoon',2],
-  ['Adventure Holidays','Explore forests, waterfalls and trails through the Western Ghats.','Adventure Tour',4],
+  ['Family Holidays','Bring the family together for tea estates, backwaters and beach days.','Family Tour','Munnar'],
+  ['Honeymoon Escapes','Pair quiet hill-station stays with a private houseboat cruise.','Honeymoon','Alappuzha'],
+  ['Adventure Holidays','Explore forests, waterfalls and trails through the Western Ghats.','Adventure Tour','Thekkady'],
 ];
 
 const destinations = ['Munnar','Alappuzha','Thekkady','Varkala'];
@@ -26,7 +27,7 @@ function Carousel({label,children}){
   </>;
 }
 
-export default function Holidays({renderTour,photos}){
+export default function Holidays({renderTour}){
   const [filter,setFilter]=useState(null);
   const packagesRef=useRef(null);
   const matches=filter?tours.filter(tour=>tour.type===filter||tour.places.includes(filter)):tours;
@@ -35,7 +36,7 @@ export default function Holidays({renderTour,photos}){
     packagesRef.current.scrollIntoView({behavior:'smooth'});
   }
   return <main className="holidays">
-    <section className="contact-hero holidays-hero">
+    <section className="contact-hero holidays-hero" style={{backgroundImage:'linear-gradient(#0005,#0005),url('+destinationPhotos.Munnar.src+')'}}>
       <h1>Vacation Packages</h1>
       <nav aria-label="Breadcrumb"><a href="/">Home</a><ChevronRight size={18}/><span aria-current="page">Holidays</span></nav>
     </section>
@@ -50,7 +51,7 @@ export default function Holidays({renderTour,photos}){
       <div className="wrap holiday-section">
         <h2>Discounts &amp; Offers</h2>
         <p>Explore featured holidays and ask about offers for your travel dates.</p>
-        <div className="holiday-offer-grid">{themes.map(([title,description,type,image])=><article key={type} style={{backgroundImage:'linear-gradient(90deg,#081826e8,#08182620),url('+asset('travel-agency-offer-card-img'+image+'.jpg')+')'}}>
+        <div className="holiday-offer-grid">{themes.map(([title,description,type,place])=><article key={type} style={{backgroundImage:'linear-gradient(90deg,#081826e8,#08182620),url('+destinationPhotos[place].src+')'}}>
           <h3>{title}</h3><p>{description}</p><button className="holiday-button" onClick={()=>choose(type)}>Explore Packages <ArrowRight size={16}/></button>
         </article>)}</div>
       </div>
@@ -59,8 +60,8 @@ export default function Holidays({renderTour,photos}){
     <section className="wrap holiday-section">
       <h2>Kerala Destination Deals</h2>
       <p>Find a holiday package around the places you’d most like to visit.</p>
-      <div className="holiday-destination-grid">{destinations.map((place,i)=><button className="destination" key={place} onClick={()=>choose(place)}>
-        <img src={photos[[1,4,3,5][i]]} alt="" loading="lazy"/>
+      <div className="holiday-destination-grid">{destinations.map((place)=><button className="destination" key={place} onClick={()=>choose(place)}>
+        <img src={destinationPhotos[place].src} alt="" loading="lazy"/>
         <span><strong>{place}</strong><small>{tours.filter(t=>t.places.includes(place)).length} tours <ArrowRight size={15}/></small></span>
       </button>)}</div>
     </section>
@@ -70,12 +71,12 @@ export default function Holidays({renderTour,photos}){
       <p>Explore international holiday ideas and ask about availability for your travel dates.</p>
       <div className="holiday-destination-grid">
         {[
-          ['Morocco','Medinas & desert escapes',0],
-          ['Jordan','Petra & Wadi Rum',3],
-          ['Vietnam','Cities, coast & countryside',6],
-          ['Saudi Arabia','Heritage & desert landscapes',7],
-        ].map(([place,detail,photo])=><a className="destination worldwide-destination" key={place} href={'/contact/?destination='+encodeURIComponent(place)+'#enquiry'}>
-          <img src={photos[photo]} alt="" loading="lazy"/>
+          ['Morocco','Medinas & desert escapes'],
+          ['Jordan','Petra & Wadi Rum'],
+          ['Vietnam','Cities, coast & countryside'],
+          ['Saudi Arabia','Heritage & desert landscapes'],
+        ].map(([place,detail])=><a className="destination worldwide-destination" key={place} href={'/contact/?destination='+encodeURIComponent(place)+'#enquiry'}>
+          <img src={internationalPhotos[place].src} alt="" loading="lazy"/>
           <span><strong>{place}</strong><small>{detail} <ArrowRight size={15}/></small></span>
         </a>)}
       </div>
@@ -84,6 +85,14 @@ export default function Holidays({renderTour,photos}){
       <div className="section-head"><div><h2>Best Experience Deals</h2><p>Make time for Kerala’s backwaters, tea gardens and heritage streets.</p></div><a className="holiday-button" href="/#experiences">View All Experiences <ArrowRight size={16}/></a></div>
       <div className="cards">{experiences.map(renderTour)}</div>
     </section>
+    <details className="wrap mb-10 text-sm text-neutral-600">
+      <summary className="cursor-pointer">Photo credits</summary>
+      <ul className="mt-3 space-y-2">
+        {Object.entries({...destinationPhotos,...internationalPhotos}).map(([place,photo])=><li key={place}>
+          {place} · <a className="underline" href={photo.source}>{photo.author}</a> · <a className="underline" href={'https://creativecommons.org/licenses/'+photo.license+'/'}>CC {photo.license.replace('/',' ').toUpperCase()}</a>
+        </li>)}
+      </ul>
+    </details>
   </main>;
 }
 
