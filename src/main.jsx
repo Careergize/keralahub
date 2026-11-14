@@ -1,0 +1,177 @@
+import React, {useRef, useState} from 'react';
+import {createRoot} from 'react-dom/client';
+import {ArrowRight, Binoculars, CalendarDays, ChevronDown, ChevronLeft, ChevronRight, CircleUser, Compass, Globe, Heart, MapPin, Menu, MessageCircle, Search, X} from 'lucide-react';
+import {asset, experiences, regions, tours} from './data';
+import './style.css';
+import Contact from './Contact';
+import Holidays from './Holidays';
+import Visa from './Visa';
+import HomeOffers from './HomeOffers';
+
+const isContact = ['/contact','/contact/'].includes(window.location.pathname);
+const isHolidays = ['/holidays','/holidays/'].includes(window.location.pathname);
+const isVisa = ['/visa-category','/visa-category/'].includes(window.location.pathname);
+if (isVisa) document.title = 'Visa Processing | Kerala Hub Holidays';
+if (isContact) document.title = 'Contact Us | Kerala Hub Holidays';
+if (isHolidays) document.title = 'Vacation Packages | Kerala Hub Holidays';
+
+const places = Object.values(regions).flat();
+const photos = [4,2,5,1,6,9,7,8].map((n) => asset('package-details-gallery-img'+n+(n >= 6 ? '-1024x643' : '')+'.webp'));
+const links = [['Home','#home'],['Destination','#destinations'],['Pages','#about'],['Holidays','/holidays/'],['Contact','/contact/']];
+
+function Brand(){
+  return <a href="/#home" className="brand"><Compass size={30}/><span>Kerala Hub<small>HOLIDAYS</small></span></a>;
+}
+
+function TourCard({tour, onOpen}){
+  const [photo,setPhoto] = useState(0);
+  const [saved,setSaved] = useState(false);
+  const images = [photos[tour.image-1],photos[tour.image%photos.length],photos[(tour.image+1)%photos.length]];
+  return <article className="tour">
+    <div className="tour-photo group">
+      <img src={images[photo]} alt="" loading="lazy"/>
+      <span className="tag">{tour.type}</span>
+      <button className="save" aria-label={saved?'Remove saved tour':'Save tour'} aria-pressed={saved} onClick={()=>setSaved(!saved)}><Heart size={17} fill={saved?'currentColor':'none'}/></button>
+      <button className="slide prev" aria-label="Previous photo" onClick={()=>setPhoto((photo+2)%3)}><ChevronLeft size={17}/></button>
+      <button className="slide next" aria-label="Next photo" onClick={()=>setPhoto((photo+1)%3)}><ChevronRight size={17}/></button>
+      <div className="dots">{images.map((_,i)=><button key={i} aria-label={'Show photo '+(i+1)} className={photo===i?'selected':''} onClick={()=>setPhoto(i)}/>)}</div>
+    </div>
+    <div className="p-5">
+      <div className="meta"><span><MapPin size={15}/> {tour.places[0]}</span><span><CalendarDays size={15}/> {tour.days} {tour.days===1?'Day':'Days'}</span></div>
+      <button className="tour-title" onClick={()=>onOpen(tour)}>{tour.title}</button>
+      <p className="text-sm text-neutral-500">{tour.places.join('  ›  ')}</p>
+      <div className="tour-bottom"><span>Tailor-made itinerary</span><button className="pill" onClick={()=>onOpen(tour)}>View Tour <ArrowRight size={15}/></button></div>
+    </div>
+  </article>;
+}
+
+function App(){
+  const [menu,setMenu]=useState(false);
+  const [mode,setMode]=useState('Tours');
+  const [destination,setDestination]=useState('');
+  const [category,setCategory]=useState('');
+  const [date,setDate]=useState('');
+  const [filter,setFilter]=useState(null);
+  const [region,setRegion]=useState('Hill Stations');
+  const [dialog,setDialog]=useState(null);
+  const [tripPlace,setTripPlace]=useState('');
+  const [tripDate,setTripDate]=useState('');
+  const [summary,setSummary]=useState('');
+  const [newsletter,setNewsletter]=useState('');
+  const searchRef=useRef(null);
+  const results = (filter?.mode==='Experience'?experiences:tours).filter(tour=>
+    (!filter?.destination||tour.places.includes(filter.destination)) && (!filter?.category||tour.type===filter.category));
+  const search = (place=destination,kind=mode,type=category) => {
+    setDestination(place); setFilter({destination:place,mode:kind,category:type});
+    searchRef.current.scrollIntoView({behavior:'smooth'});
+  };
+  function plan(place=''){
+    setTripPlace(place); setSummary(''); setDialog({kind:'plan'});
+  }
+  return <>
+    <div id="home" className="promo">Explore our <strong>Kerala Honeymoon Tours.</strong> <a href="/#packages" onClick={()=>setFilter({category:'Honeymoon'})}>See Details ›</a></div>
+    <header className="site-header">
+      <Brand/>
+      <nav className={menu?'nav open':'nav'} aria-label="Main navigation">{links.map(([label,href],i)=>label==='Pages'?<details className='pages-dropdown relative' key={label} onKeyDown={event=>{if(event.key==='Escape'){event.currentTarget.open=false;event.currentTarget.querySelector('summary').focus();}}}><summary className={isVisa?'active':''}>Pages <ChevronDown size={13}/></summary><div><a href='/#about'>About Us</a><a href='/visa-category/' aria-current={isVisa?'page':undefined}>Visa</a></div></details>:<a key={href} href={href.startsWith("#")?"/"+href:href} onClick={()=>setMenu(false)} className={i===(isVisa?-1:isContact?4:isHolidays?3:0)?'active':''}>{label}{[1,2].includes(i)&&<ChevronDown size={13}/>}</a>)}</nav>
+      <div className="header-actions"><span><Globe size={17}/> INR</span><button aria-label="Open trip planner" onClick={()=>plan()}><CircleUser size={19}/></button><a className="pill" href="/contact/"><MessageCircle size={17}/> Contact Us</a></div>
+      <button className="mobile-toggle" aria-label="Toggle navigation" aria-expanded={menu} onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button>
+    </header>
+
+    {isVisa?<Visa/>:isContact?<Contact/>:isHolidays?<Holidays photos={photos} renderTour={tour=><TourCard key={tour.title} tour={tour} onOpen={tour=>setDialog({kind:'tour',tour})}/>}/>:<main>
+      <section className="hero">
+        <video src={asset('travel-agency-banner-video.mp4')} autoPlay muted loop playsInline aria-hidden="true"/>
+        <div className="hero-content">
+          <p className="eyebrow">EXCEPTIONAL TRAVEL EXPERIENCE.</p>
+          <h1>Travel With Kerala Hub Holidays</h1>
+          <p className="hero-copy">We curate exceptional travel experiences across Kerala, from the hills to the backwaters.</p>
+          <a href="/#packages" className="hero-button">See all packages <ChevronRight size={16}/></a>
+        </div>
+      </section>
+
+      <div className="wrap search-wrap">
+        <div className="search-box">
+          <div className="flex flex-wrap gap-3 sm:gap-4" aria-label="Travel type">{[['Tours',Globe],['Experience',Binoculars],['Visa',Compass]].map(([label,Icon])=><button key={label} className={'tab '+(mode===label?'active':'')} aria-pressed={mode===label} onClick={()=>{setMode(label);setCategory('')}}><Icon size={19}/>{label}</button>)}</div>
+          {mode==='Visa'?<div className="visa-panel">Need help planning an international trip? <a className="pill" href="/visa-category/">Explore visa options <ArrowRight size={16}/></a></div>:
+          <form className="finder" onSubmit={e=>{e.preventDefault();search()}}>
+            <label><MapPin/><span>Destination<select value={destination} onChange={e=>setDestination(e.target.value)}><option value="">Select destination</option>{places.map(p=><option key={p}>{p}</option>)}</select></span></label>
+            <label><CalendarDays/><span>Travel date<input type="date" value={date} onChange={e=>setDate(e.target.value)}/></span></label>
+            <label><Compass/><span>Category<select value={category} onChange={e=>setCategory(e.target.value)}><option value="">Select category</option>{[...new Set((mode==='Tours'?tours:experiences).map(t=>t.type))].map(t=><option key={t}>{t}</option>)}</select></span></label>
+            <button className="pill" type="submit"><Search size={18}/> Search</button>
+          </form>}
+          <p className="search-note">Can’t find what you’re looking for? <button onClick={()=>plan(destination)}>Create</button> your custom itinerary.</p>
+        </div>
+      </div>
+
+      <HomeOffers/>
+
+      <section className="wrap section about" id="about">
+        <div className="avatars">{[1,2,3,4].map(i=><img key={i} src={asset('travel-partner-img'+i+'.png')} alt="" loading="lazy"/>)}</div>
+        <h2>Kerala Hub Holidays, Your Travel Partner!</h2>
+        <p className="intro">Explore Kerala with personalized itineraries, curated tour packages and local travel guidance.</p>
+        <div className="grid gap-5 md:grid-cols-3">
+          {['Historical Landmark Itinerary','Expert Private Tour Guide','Handpicked Travel Experience'].map((title,i)=><article className="info" key={title}><img src={asset('travel-info-card-img'+(i+1)+'.svg')} alt=""/><h3>{title}</h3><p>{['Explore the forts, palaces and historic streets that tell Kerala’s story.','Discover local stories and favorite spots with a private guide.','Make time for the places and experiences you want to see most.'][i]}</p></article>)}
+        </div>
+      </section>
+
+      <section className="wrap section" id="packages" ref={searchRef}>
+        <div className="section-head"><h2>{filter?.mode==='Experience'?'Travel Experiences':'Featured Travel Packages'}</h2><button className="outline" onClick={()=>setFilter(null)}>View all packages <ArrowRight size={16}/></button></div>
+        {filter&&<p className="mb-5 text-neutral-600" role="status">{results.length} matching {results.length===1?'itinerary':'itineraries'}{filter.destination?' in '+filter.destination:''}{date?' for your trip on '+date:''}.</p>}
+        <div className="cards">{results.map(tour=><TourCard key={tour.title} tour={tour} onOpen={tour=>setDialog({kind:'tour',tour})}/>)}</div>
+        {!results.length&&<button className="pill" onClick={()=>plan(destination)}>Create a custom itinerary <ArrowRight size={16}/></button>}
+      </section>
+
+      <section className="section destinations" id="destinations">
+        <div className="wrap text-center"><h2>Most Popular Destinations</h2>
+          <div className="flex flex-wrap justify-center gap-3 my-7">{Object.keys(regions).map(name=><button key={name} className={'tab '+(region===name?'active':'')} aria-pressed={region===name} onClick={()=>setRegion(name)}><MapPin size={16}/>{name}</button>)}</div>
+          <div className="destination-grid">{regions[region].map(place=><button className="destination" key={place} onClick={()=>search(place,'Tours','')}><img src={photos[places.indexOf(place)]} alt="" loading="lazy"/><span>{place} <ArrowRight size={20}/></span></button>)}</div>
+        </div>
+      </section>
+
+      <section className="wrap section customize">
+        <div><h2>Need a Customized Package?</h2><p className="my-4">Create your custom travel journey in just 03 steps.</p><ol className="steps"><li>Choose a destination.</li><li>Select your travel date.</li><li>Add your travel preferences.</li></ol><button className="pill" onClick={()=>plan()}>Select Destination <ArrowRight size={16}/></button></div>
+        <aside><MessageCircle size={35}/><h3>Need help planning?</h3><p>Tell us where you’d like to go and what you’d like to do.</p><a className="outline" href="/contact/">Contact Us <ArrowRight size={16}/></a></aside>
+      </section>
+
+      <section className="wrap section" id="experiences"><div className="section-head"><h2>Travel Experiences</h2><button className="outline" onClick={()=>search('','Experience','')}>View all experiences <ArrowRight size={16}/></button></div>
+        <div className="cards">{experiences.map(tour=><TourCard key={tour.title} tour={tour} onOpen={tour=>setDialog({kind:'tour',tour})}/>)}</div>
+      </section>
+
+      <section className="section travel-guide" id="inspiration"><div className="wrap"><div className="section-head"><h2>Travel Inspirations</h2><p>Ideas for your next Kerala holiday.</p></div><div className="cards">
+        {experiences.map((item,i)=><article className="journal" key={item.title}><img src={photos[i+3]} alt="" loading="lazy"/><div className="p-5"><h3>{['What to expect on a backwater cruise','Planning a trip to Munnar’s tea country','A walking guide to Fort Kochi'][i]}</h3><button className="text-blue-700 mt-4 font-semibold" onClick={()=>setDialog({kind:'tour',tour:item})}>Read More →</button></div></article>)}
+      </div></div></section>
+      <div className="gallery" aria-label="Travel gallery">{[1,2,3,4,5].map(i=><button key={i} aria-label={'Open gallery image '+i} onClick={()=>setDialog({kind:'image',image:i})}><img src={asset('gallery-img-'+i+'.webp')} alt="" loading="lazy"/></button>)}</div>
+    </main>}
+
+    <footer id="contact">
+      <div className="wrap">
+        <div className="newsletter"><div><h2>Get travel ideas from Kerala Hub Holidays</h2><p>Save your email for this browser preview.</p></div><form onSubmit={e=>{e.preventDefault();const email=new FormData(e.currentTarget).get('email');localStorage.setItem('kerala-newsletter',email);setNewsletter('Email saved on this device.');}}><label className="sr-only" htmlFor="newsletter-email">Email address</label><input id="newsletter-email" name="email" type="email" placeholder="Your email address" required/><button className="pill">Subscribe <ArrowRight size={16}/></button><p role="status">{newsletter}</p></form></div>
+        <div className="footer-links"><div><Brand/><p className="mt-4">Kerala, India</p></div><div><h3>Explore</h3><a href="/#about">About us</a><a href="/holidays/">Holiday packages</a><a href="/#inspiration">Travel inspirations</a></div><div><h3>Plan Your Trip</h3><a href="/#destinations">Destinations</a><a href="/#experiences">Experiences</a><a href="/contact/">Contact Us</a><button onClick={()=>plan()}>Custom itinerary</button></div></div>
+        <p className="copyright">© {new Date().getFullYear()} Kerala Hub Holidays. All rights reserved.</p>
+      </div>
+    </footer>
+
+    {dialog&&<Dialog onClose={()=>setDialog(null)} title={dialog.kind==='plan'?'Plan Your Kerala Holiday':dialog.kind==='tour'?dialog.tour.title:'Travel gallery'}>
+      {dialog.kind==='image'&&<img className="w-full rounded-xl" src={asset('gallery-img-'+dialog.image+'.webp')} alt={'Travel gallery image '+dialog.image}/>}
+      {dialog.kind==='tour'&&<><img className="aspect-video w-full rounded-xl object-cover" src={photos[dialog.tour.image-1]} alt=""/><p className="my-4">{dialog.tour.detail}</p><p className="mb-5 text-neutral-600">{dialog.tour.days} {dialog.tour.days===1?'day':'days'} · {dialog.tour.places.join(' › ')}</p><button className="pill" onClick={()=>plan(dialog.tour.places[0])}>Plan This Trip <ArrowRight size={16}/></button></>}
+      {dialog.kind==='plan'&&<form className="plan-form" onSubmit={e=>{e.preventDefault();const data=new FormData(e.currentTarget);setSummary(tripPlace+' · '+tripDate+' · '+data.get('travelers')+' traveler(s)'+(data.get('preferences')?' · '+data.get('preferences'):''));}}>
+        <label>Destination<select required value={tripPlace} onChange={e=>setTripPlace(e.target.value)}><option value="">Select destination</option>{places.map(p=><option key={p}>{p}</option>)}</select></label>
+        <label>Travel date<input required type="date" value={tripDate} onChange={e=>setTripDate(e.target.value)}/></label>
+        <label>Travelers<input type="number" name="travelers" required min="1" defaultValue="2"/></label>
+        <label>Preferences<textarea name="preferences" rows="3"/></label>
+        <button className="pill">Create trip summary <ArrowRight size={16}/></button>
+        {summary&&<div className="summary" role="status"><strong>Your trip summary</strong><p>{summary}</p></div>}
+      </form>}
+    </Dialog>}
+  </>;
+}
+
+function Dialog({title,children,onClose}){
+  return <dialog ref={node=>{if(node&&!node.open)node.showModal()}} onCancel={e=>{e.preventDefault();onClose()}} onClick={e=>{if(e.target===e.currentTarget)onClose()}}>
+    <div className="dialog-content"><div className="section-head"><h2>{title}</h2><button aria-label="Close dialog" onClick={onClose}><X/></button></div>{children}</div>
+  </dialog>;
+}
+
+createRoot(document.getElementById('root')).render(<App/>);
+
+
+

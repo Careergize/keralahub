@@ -1,0 +1,27 @@
+@reference './style.css';
+
+.holidays-hero {
+  @apply mx-[1.2%] rounded-[20px] md:h-[374px];
+  background-image:linear-gradient(#0003,#0003),url('https://atlastrip-wp.egenstheme.com/wp-content/uploads/2026/07/breadcrumb-bg1.webp');
+  background-color:#324d2b;
+}
+.holiday-section {@apply py-12 md:py-20;}
+.holidays-hero + .holiday-section {@apply md:pt-24;}
+.holiday-section > p,.holiday-section .section-head p {@apply mt-4 max-w-[570px] text-neutral-600;}
+.holiday-section .section-head {@apply items-end;}
+.holiday-button {@apply inline-flex w-fit items-center gap-2 rounded-full bg-[#e8f3ff] px-5 py-2.5 text-sm font-semibold text-brand hover:bg-blue-100;}
+.holiday-filter {@apply mb-4;}
+.holiday-track {@apply grid auto-cols-[88%] grid-flow-col snap-x snap-mandatory gap-6 overflow-x-auto pb-3 sm:auto-cols-[calc((100%-24px)/2)] lg:auto-cols-[calc((100%-48px)/3)];}
+.holiday-track > * {@apply snap-start;}
+.holiday-arrows {@apply mt-4 flex justify-center gap-3;}
+.holiday-arrows button {@apply grid size-10 place-items-center rounded-full border border-neutral-200 hover:border-brand hover:text-brand;}
+.holiday-offers {@apply bg-[#f4f8ff];}
+.holiday-offer-grid {@apply mt-8 grid gap-6 md:grid-cols-3;}
+.holiday-offer-grid article {@apply flex min-h-[235px] flex-col items-start justify-end gap-4 rounded-2xl bg-slate-800 bg-cover bg-center p-6 text-white;}
+.holiday-offer-grid h3 {@apply text-2xl;}
+.holiday-offer-grid p {@apply text-sm leading-relaxed;}
+.holiday-destination-grid {@apply mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6;}
+.holiday-destination-grid .destination span {@apply items-start gap-1 p-3 pt-10 sm:flex-col md:p-5;}
+.holiday-destination-grid .destination strong {@apply text-base md:text-xl;}
+.holiday-destination-grid .destination small {@apply hidden items-center gap-1 text-xs font-medium sm:inline-flex;}
+.holiday-experiences {@apply pt-0;}

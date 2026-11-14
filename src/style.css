@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-brand: #0668e8;
+  --font-sans: 'Poppins', 'DM Sans', sans-serif;
+}
+
+@layer base {
+  html {scroll-behavior:smooth;scroll-padding-top:90px}
+  body {@apply font-sans text-neutral-900;}
+  button, select {@apply cursor-pointer;}
+  h2 {@apply text-3xl font-semibold tracking-tight md:text-[42px] md:leading-tight;}
+  h3 {@apply text-lg font-semibold;}
+  :focus-visible {@apply outline-2 outline-offset-4 outline-brand;}
+}
+@layer components {
+  .wrap {@apply mx-auto w-[88%] max-w-[1320px];}
+  .section {@apply py-14 md:py-20;}
+  .pill {@apply inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 font-medium text-white transition hover:bg-blue-800;}
+  .outline {@apply inline-flex w-fit items-center gap-2 rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium hover:border-brand hover:text-brand;}
+  .promo {@apply flex min-h-10 flex-wrap items-center justify-center gap-x-1 bg-brand px-3 py-2 text-center text-sm text-white;}
+  .promo a {@apply ml-3 font-semibold;}
+  .site-header {@apply sticky top-0 z-20 flex min-h-[69px] items-center justify-between gap-4 bg-white px-[1.75%] shadow-sm;}
+  .brand {@apply inline-flex shrink-0 items-center gap-1.5 text-xl font-semibold leading-none tracking-tight;}
+  .brand svg {@apply text-brand;}
+  .brand small {@apply mt-1 block text-[9px] tracking-[.28em];}
+  .planner {@apply hidden shrink-0 items-center gap-1.5 rounded-full border border-blue-100 px-3 py-1 text-sm text-slate-700 sm:inline-flex;}
+  .planner svg {@apply text-brand;}
+  .nav {@apply hidden items-center gap-7 lg:flex;}
+  .nav a {@apply flex items-center gap-0.5 text-[15px] font-medium hover:text-brand;}
+  .nav .active {@apply text-brand;}
+  .header-actions {@apply ml-auto hidden shrink-0 items-center gap-5 text-sm lg:ml-0 lg:flex;}
+  .header-actions span {@apply flex items-center gap-2;}
+  .mobile-toggle {@apply ml-auto rounded-lg p-2 lg:hidden;}
+  .nav.open {@apply absolute inset-x-0 top-full flex flex-col items-start gap-5 border-t bg-white p-6 shadow-lg lg:static lg:flex-row lg:items-center lg:gap-7 lg:border-0 lg:p-0 lg:shadow-none;}
+  .hero {@apply relative isolate min-h-[580px] overflow-hidden bg-[#062b3b] text-center text-white md:min-h-[660px];}
+  .hero video {@apply absolute inset-0 -z-20 h-full w-full object-cover;}
+  .hero::after {@apply absolute inset-0 -z-10 bg-black/30 content-[''];}
+  .hero-content {@apply mx-auto max-w-[1180px] px-5 pt-[100px] md:pt-[118px];}
+  .eyebrow {@apply text-xs font-semibold tracking-[.29em] md:text-base;}
+  .hero h1 {@apply mt-4 text-[42px] leading-[1.13] font-semibold tracking-tight sm:text-5xl lg:text-[60px];}
+  .hero-copy {@apply mx-auto mt-6 max-w-[890px] text-base font-medium md:text-lg;}
+  .hero-button {@apply mt-10 inline-flex items-center gap-2 rounded-full border border-white/10 bg-neutral-800/70 px-8 py-[18px] font-semibold backdrop-blur hover:bg-brand;}
+  .search-wrap {@apply relative z-10 -mt-[140px];}
+  .search-box {@apply rounded-2xl bg-white p-5 shadow-[0_8px_36px_#12295217] md:p-[30px];}
+  .tab {@apply inline-flex items-center gap-1.5 rounded-full bg-[#e8f3ff] px-4 py-2.5 text-sm font-semibold text-brand hover:bg-blue-100;}
+  .tab.active {@apply bg-brand text-white;}
+  .finder {@apply my-5 grid items-stretch gap-2 rounded-xl border border-neutral-200 p-2 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_auto];}
+  .finder label {@apply flex min-w-0 items-center gap-3 rounded-lg px-3 py-2 text-sm text-neutral-500 lg:border-r lg:border-neutral-200;}
+  .finder label svg {@apply shrink-0 text-brand;}
+  .finder label span {@apply min-w-0 flex-1;}
+  .finder :is(select,input) {@apply block w-full min-w-0 bg-transparent pt-1 font-medium text-neutral-900;}
+  .search-note {@apply text-sm text-neutral-500;}
+  .search-note button {@apply font-semibold text-brand underline;}
+  .visa-panel {@apply my-5 flex flex-wrap items-center gap-4 rounded-lg border border-neutral-200 p-4;}
+  .about {@apply text-center;}
+  .avatars {@apply mb-5 flex justify-center -space-x-2;}
+  .avatars img {@apply size-12 rounded-full border-2 border-white object-cover;}
+  .intro {@apply mx-auto mt-4 mb-9 max-w-[700px] text-neutral-600;}
+  .info {@apply rounded-2xl border border-neutral-200 bg-[#f7faff] p-6;}
+  .info img {@apply mx-auto mb-4 size-16 object-contain;}
+  .info p {@apply mt-2 text-sm leading-6 text-neutral-600;}
+  .offers {@apply grid grid-cols-2 gap-4 lg:grid-cols-4;}
+  .offers img {@apply w-full rounded-xl object-cover;}
+  .section-head {@apply mb-7 flex flex-wrap items-center justify-between gap-4;}
+  .cards {@apply grid gap-6 sm:grid-cols-2 lg:grid-cols-3;}
+  .tour,.journal {@apply overflow-hidden rounded-2xl border border-neutral-200 bg-white;}
+  .tour-photo {@apply relative aspect-[1.55] overflow-hidden bg-slate-200;}
+  .tour-photo img,.journal img {@apply h-full w-full object-cover;}
+  .journal img {@apply aspect-video;}
+  .tag {@apply absolute top-3 left-3 rounded-full bg-white px-3 py-1.5 text-xs font-medium;}
+  .save,.slide {@apply absolute grid size-8 place-items-center rounded-full bg-white text-neutral-900 shadow-sm hover:text-brand;}
+  .save {@apply top-3 right-3;}
+  .slide {@apply top-1/2 -translate-y-1/2;}
+  .prev {@apply left-3;}
+  .next {@apply right-3;}
+  .dots {@apply absolute right-0 bottom-3 left-0 flex justify-center gap-1.5;}
+  .dots button {@apply size-2 rounded-full bg-white/70;}
+  .dots .selected {@apply bg-brand;}
+  .meta {@apply mb-3 flex justify-between gap-3 text-sm text-neutral-600;}
+  .meta span {@apply inline-flex items-center gap-1;}
+  .tour-title {@apply mb-2 text-left text-lg font-semibold hover:text-brand;}
+  .tour-bottom {@apply mt-5 flex flex-wrap items-center justify-between gap-2 border-t border-neutral-200 pt-4 text-sm;}
+  .destinations {@apply bg-[#bdebce] bg-cover bg-center;}
+  .destination-grid {@apply flex flex-wrap justify-center gap-5;}
+  .destination {@apply relative w-full max-w-[365px] overflow-hidden rounded-2xl text-left text-white;}
+  .destination img {@apply aspect-[4/5] w-full object-cover transition duration-300 hover:scale-105;}
+  .destination span {@apply pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-black/85 to-transparent p-5 pt-12 text-xl font-semibold;}
+  .customize {@apply grid gap-6 md:grid-cols-[1.5fr_1fr];}
+  .customize > div,.customize aside {@apply rounded-2xl bg-[#eaf4ff] p-7 md:p-10;}
+  .customize aside {@apply flex flex-col items-start justify-center gap-4 bg-[#f0f0f0] bg-cover bg-center;}
+  .customize aside svg {@apply text-brand;}
+  .steps {@apply mb-6 list-decimal space-y-2 pl-5;}
+  .travel-guide {@apply bg-neutral-50;}
+  .gallery {@apply grid grid-cols-2 sm:grid-cols-5;}
+  .gallery img {@apply aspect-[4/3] w-full object-cover;}
+  .gallery button:last-child {@apply hidden sm:block;}
+  footer {@apply bg-[#072231] py-12 text-white;}
+  .newsletter {@apply grid items-center gap-6 border-b border-white/20 pb-9 lg:grid-cols-2;}
+  .newsletter h2 {@apply mb-2 text-2xl md:text-3xl;}
+  .newsletter form {@apply flex flex-wrap gap-2;}
+  .newsletter input {@apply min-w-0 flex-1 rounded-full bg-white px-4 py-3 text-neutral-900;}
+  .newsletter form p {@apply w-full text-sm;}
+  .footer-links {@apply grid gap-8 py-10 sm:grid-cols-3;}
+  .footer-links h3 {@apply mb-3;}
+  .footer-links :is(a,button):not(.brand) {@apply mb-2 block text-sm text-white/75 hover:text-white;}
+  .copyright {@apply border-t border-white/20 pt-5 text-sm text-white/75;}
+  dialog {@apply m-auto max-h-[90vh] w-[min(92%,570px)] overflow-auto rounded-2xl bg-white text-neutral-900 shadow-2xl;}
+  dialog::backdrop {@apply bg-black/55;}
+  .dialog-content {@apply p-6 md:p-8;}
+  .dialog-content .section-head {@apply flex-nowrap;}
+  .dialog-content h2 {@apply text-2xl;}
+  .plan-form {@apply grid gap-4;}
+  .plan-form label {@apply grid gap-1 text-sm font-medium;}
+  .plan-form :is(select,input,textarea) {@apply w-full rounded-lg border border-neutral-300 p-3;}
+  .summary {@apply rounded-lg bg-blue-50 p-4;}
+}
+.destinations {background-image:url('https://atlastrip-wp.egenstheme.com/travel-agency/wp-content/uploads/sites/2/2026/08/destination-section-bg.png')}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@layer components {
+  .pages-dropdown summary {@apply flex cursor-pointer list-none items-center text-[15px] font-medium hover:text-brand;}
+  .pages-dropdown summary::-webkit-details-marker {display:none;}
+  .pages-dropdown > div {@apply mt-2 min-w-40 rounded-xl border border-neutral-200 bg-white p-2 shadow-lg lg:absolute lg:left-0 lg:top-full;}
+  .pages-dropdown a {@apply rounded-lg px-3 py-2 hover:bg-blue-50;}
+}
