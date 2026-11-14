@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import {openWhatsAppEnquiry} from './whatsapp';
+import React from 'react';
 import {ArrowRight, ChevronDown, ChevronRight, Compass, MapPin, MessageCircle} from 'lucide-react';
 import {regions, topDestinations} from './data';
 import './contact.css';
@@ -14,21 +15,12 @@ const questions = [
 ];
 
 export default function Contact(){
-  const [status,setStatus]=useState('');
   const requestedDestination = new URLSearchParams(window.location.search).get('destination');
   const initialDestination = [...internationalDestinations,...Object.values(regions).flat()].includes(requestedDestination) ? requestedDestination : '';
 
-  function downloadEnquiry(event){
+  function sendEnquiry(event){
     event.preventDefault();
-    const fields = new FormData(event.currentTarget);
-    const lines = ['Kerala Hub Holidays — Travel Enquiry', '', ...Array.from(fields, ([name,value]) => name + ': ' + value)];
-    const url = URL.createObjectURL(new Blob([lines.join('\r\n')],{type:'text/plain;charset=utf-8'}));
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'kerala-hub-enquiry.txt';
-    link.click();
-    setTimeout(()=>URL.revokeObjectURL(url),1000);
-    setStatus('Your enquiry draft was downloaded. Online submission is currently unavailable.');
+    openWhatsAppEnquiry('Kerala Hub Holidays — Travel Enquiry', new FormData(event.currentTarget));
   }
 
   return <main>
@@ -42,20 +34,20 @@ export default function Contact(){
       <div className="contact-cards">
         <article><MapPin/><h3>Kerala, India</h3><p>Explore destinations across God’s Own Country.</p><a href="#location">View region <ArrowRight size={15}/></a></article>
         <article><Compass/><h3>Holiday Packages</h3><p>Find a trip that suits your dates and interests.</p><a href="/#packages">Browse packages <ArrowRight size={15}/></a></article>
-        <article><MessageCircle/><h3>Travel Enquiries</h3><p>Share your plans for a tailor-made Kerala holiday.</p><a href="#enquiry">Prepare an enquiry <ArrowRight size={15}/></a></article>
+        <article><MessageCircle/><h3>Travel Enquiries</h3><a href="tel:+918281302520">+91 8281302520</a><a href="tel:+919175599089">+91 9175599089</a><p>Share your plans for a tailor-made Kerala holiday.</p><a href="#enquiry">Prepare an enquiry <ArrowRight size={15}/></a></article>
       </div>
     </section>
 
     <section className="enquiry" id="enquiry">
       <h2>Let's Plan Your Next Journey</h2>
-      <form onSubmit={downloadEnquiry}>
+      <form onSubmit={sendEnquiry}>
         <label>Full Name<input name="Full Name" autoComplete="name" required/></label>
         <label>Email Address<input name="Email Address" type="email" autoComplete="email" required/></label>
         <label>Phone Number<input name="Phone Number" type="tel" autoComplete="tel"/></label>
         <label>Where are you going?<select name="Destination" defaultValue={initialDestination} required><option value="" disabled>Select Destination</option>{Object.values(regions).flat().map(place=><option key={place}>{place}</option>)}<optgroup label="International">{internationalDestinations.map(place=><option key={place}>{place}</option>)}</optgroup><option>Multiple destinations</option><option>Still deciding</option></select></label>
         <label className="enquiry-wide">Message<textarea name="Message" rows="5" defaultValue={new URLSearchParams(window.location.search).get("message") || ""} required/></label>
-        <p className="enquiry-wide text-sm text-neutral-600">Online submission is currently unavailable. Download a copy of your enquiry for your records.</p>
-        <div className="enquiry-wide"><button className="pill">Download enquiry <ArrowRight size={17}/></button><p className="mt-3 text-sm" role="status">{status}</p></div>
+        <p className="enquiry-wide text-sm text-neutral-600">WhatsApp opens with your enquiry ready to review and send.</p>
+        <div className="enquiry-wide"><button className="pill">Continue to WhatsApp <ArrowRight size={17}/></button></div>
       </form>
     </section>
 

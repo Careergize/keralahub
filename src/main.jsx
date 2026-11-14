@@ -1,3 +1,4 @@
+import {openWhatsAppEnquiry} from './whatsapp';
 import InternationalTips from './InternationalTips';
 import React, {useEffect, useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
@@ -8,6 +9,7 @@ import Contact from './Contact';
 import Holidays from './Holidays';
 import Visa from './Visa';
 import Hotels from './Hotels';
+import CarRentals from './CarRentals';
 import HomeOffers from './HomeOffers';
 import TopDestinations from './TopDestinations';
 import TravelBenefits from './TravelBenefits';
@@ -17,6 +19,8 @@ const isContact = ['/contact','/contact/'].includes(window.location.pathname);
 const isHolidays = ['/holidays','/holidays/'].includes(window.location.pathname);
 const isVisa = ['/visa-category','/visa-category/'].includes(window.location.pathname);
 const isHotels = ['/hotel','/hotel/'].includes(window.location.pathname);
+const isCarRentals = ['/transport','/transport/'].includes(window.location.pathname);
+if (isCarRentals) document.title = 'Car Rentals | Kerala Hub Holidays';
 if (isHotels) document.title = 'Hotels | Kerala Hub Holidays';
 if (isVisa) document.title = 'Visa Processing | Kerala Hub Holidays';
 if (isContact) document.title = 'Contact Us | Kerala Hub Holidays';
@@ -24,7 +28,7 @@ if (isHolidays) document.title = 'Vacation Packages | Kerala Hub Holidays';
 
 const places = Object.values(regions).flat();
 const photos = [4,2,5,1,6,9,7,8].map((n) => asset('package-details-gallery-img'+n+(n >= 6 ? '-1024x643' : '')+'.webp'));
-const links = [['Home','#home'],['Destination','#destinations'],['Pages','#about'],['Holidays','/holidays/'],['Contact','/contact/']];
+const links = [['Home','#home'],['Destination','#destinations'],['Pages','#about'],['Holidays','/holidays/'],['Car Rentals','/transport/'],['Contact','/contact/']];
 
 function Brand(){
   return <a href="/#home" className="brand"><img src="/kerala-hub-logo.png" width="346" height="105" alt="Kerala Hub Holidays"/></a>;
@@ -76,7 +80,6 @@ function App(){
   const [dialog,setDialog]=useState(null);
   const [tripPlace,setTripPlace]=useState('');
   const [tripDate,setTripDate]=useState('');
-  const [summary,setSummary]=useState('');
   const [newsletter,setNewsletter]=useState('');
   const searchRef=useRef(null);
   const results = (filter?.mode==='Experience'?experiences:tours).filter(tour=>
@@ -86,17 +89,17 @@ function App(){
     searchRef.current.scrollIntoView({behavior:'smooth'});
   };
   function plan(place=''){
-    setTripPlace(place); setSummary(''); setDialog({kind:'plan'});
+    setTripPlace(place); setDialog({kind:'plan'});
   }
   return <>
     <header id="home" className="site-header">
       <Brand/>
-      <nav className={menu?'nav open':'nav'} aria-label="Main navigation">{links.map(([label,href],i)=>label==='Pages'?<details className='pages-dropdown relative' key={label} onKeyDown={event=>{if(event.key==='Escape'){event.currentTarget.open=false;event.currentTarget.querySelector('summary').focus();}}}><summary className={isVisa||isHotels?'active':''}>Pages <ChevronDown size={13}/></summary><div><a href='/#about'>About Us</a><a href='/visa-category/' aria-current={isVisa?'page':undefined}>Visa</a><a href='/hotel/' aria-current={isHotels?'page':undefined}>Hotels</a></div></details>:<a key={href} href={href.startsWith("#")?"/"+href:href} onClick={()=>setMenu(false)} className={i===(isVisa||isHotels?-1:isContact?4:isHolidays?3:0)?'active':''}>{label}{[1,2].includes(i)&&<ChevronDown size={13}/>}</a>)}</nav>
+      <nav className={menu?'nav open':'nav'} aria-label="Main navigation">{links.map(([label,href],i)=>label==='Pages'?<details className='pages-dropdown relative' key={label} onKeyDown={event=>{if(event.key==='Escape'){event.currentTarget.open=false;event.currentTarget.querySelector('summary').focus();}}}><summary className={isVisa||isHotels?'active':''}>Pages <ChevronDown size={13}/></summary><div><a href='/#about'>About Us</a><a href='/visa-category/' aria-current={isVisa?'page':undefined}>Visa</a><a href='/hotel/' aria-current={isHotels?'page':undefined}>Hotels</a></div></details>:<a key={href} href={href.startsWith("#")?"/"+href:href} onClick={()=>setMenu(false)} className={i===(isVisa||isHotels?-1:isContact?5:isHolidays?3:isCarRentals?4:0)?'active':''}>{label}{[1,2].includes(i)&&<ChevronDown size={13}/>}</a>)}</nav>
       <div className="header-actions"><span><Globe size={17}/> INR</span><button aria-label="Open trip planner" onClick={()=>plan()}><CircleUser size={19}/></button><a className="pill" href="/contact/"><MessageCircle size={17}/> Contact Us</a></div>
       <button className="mobile-toggle" aria-label="Toggle navigation" aria-expanded={menu} onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button>
     </header>
 
-    {isHotels?<Hotels/>:isVisa?<Visa/>:isContact?<Contact/>:isHolidays?<Holidays renderTour={tour=><TourCard key={tour.title} tour={tour} onOpen={tour=>setDialog({kind:'tour',tour})}/>}/>:<main>
+    {isCarRentals?<CarRentals/>:isHotels?<Hotels/>:isVisa?<Visa/>:isContact?<Contact/>:isHolidays?<Holidays renderTour={tour=><TourCard key={tour.title} tour={tour} onOpen={tour=>setDialog({kind:'tour',tour})}/>}/>:<main>
       <section className="hero">
         <video src={asset('travel-agency-banner-video.mp4')} autoPlay muted loop playsInline aria-hidden="true"/>
         <div className="hero-content">
@@ -196,13 +199,12 @@ function App(){
       {dialog.kind==='guide'&&<p className="leading-7">{dialog.guide.tip}</p>}
       {dialog.kind==='image'&&<img className="w-full rounded-xl" src={asset('gallery-img-'+dialog.image+'.webp')} alt={'Travel gallery image '+dialog.image}/>}
       {dialog.kind==='tour'&&<><img className="aspect-video w-full rounded-xl object-cover" src={destinationPhotos[dialog.tour.places[0]].src} alt={destinationPhotos[dialog.tour.places[0]].alt}/><p className="my-4">{dialog.tour.detail}</p><p className="mb-5 text-neutral-600">{dialog.tour.days} {dialog.tour.days===1?'day':'days'} · {dialog.tour.places.join(' › ')}</p><button className="pill" onClick={()=>plan(dialog.tour.places[0])}>Plan This Trip <ArrowRight size={16}/></button></>}
-      {dialog.kind==='plan'&&<form className="plan-form" onSubmit={e=>{e.preventDefault();const data=new FormData(e.currentTarget);setSummary(tripPlace+' · '+tripDate+' · '+data.get('travelers')+' traveler(s)'+(data.get('preferences')?' · '+data.get('preferences'):''));}}>
+      {dialog.kind==='plan'&&<form className="plan-form" onSubmit={e=>{e.preventDefault();const data=new FormData(e.currentTarget);openWhatsAppEnquiry('Kerala Hub Holidays — Custom Trip Enquiry', [['Destination',tripPlace],['Travel date',tripDate],['Travelers',data.get('travelers')],['Preferences',data.get('preferences')]]);}}>
         <label>Destination<select required value={tripPlace} onChange={e=>setTripPlace(e.target.value)}><option value="">Select destination</option>{places.map(p=><option key={p}>{p}</option>)}</select></label>
         <label>Travel date<input required type="date" value={tripDate} onChange={e=>setTripDate(e.target.value)}/></label>
         <label>Travelers<input type="number" name="travelers" required min="1" defaultValue="2"/></label>
         <label>Preferences<textarea name="preferences" rows="3"/></label>
-        <button className="pill">Create trip summary <ArrowRight size={16}/></button>
-        {summary&&<div className="summary" role="status"><strong>Your trip summary</strong><p>{summary}</p></div>}
+        <button className="pill">Continue to WhatsApp <ArrowRight size={16}/></button>
       </form>}
     </Dialog>}
   </>;
