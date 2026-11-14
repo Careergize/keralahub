@@ -2,6 +2,8 @@ const uploads = 'https://atlastrip-wp.egenstheme.com/travel-agency/wp-content/up
 export const asset = (name) => uploads + name;
 
 export const tours = [
+  {title:'Kerala Highlights for Groups', places:['Kochi','Munnar','Alappuzha'], days:5, type:'Group Tour', detail:'Explore Fort Kochi together, tour Munnar’s tea estates and finish with a backwater cruise.'},
+  {title:'Solo Escape to the Kerala Coast', places:['Kochi','Varkala'], days:4, type:'Solo Tour', detail:'Explore Fort Kochi’s heritage streets and spend a day at your own pace on the Varkala coast.'},
   {title:'Kerala at a Glance', places:['Kochi','Munnar','Alappuzha'], days:5, type:'Family Tour', image:1, detail:'Walk through Fort Kochi, explore Munnar’s tea gardens and spend a night on the backwaters.'},
   {title:'Romantic Kerala Escape', places:['Munnar','Alappuzha'], days:4, type:'Honeymoon', image:2, detail:'Pair quiet hill-station stays with a private houseboat cruise.'},
   {title:'Wild Kerala Adventure', places:['Thekkady','Munnar'], days:6, type:'Adventure Tour', image:4, detail:'Spend time in spice gardens and discover the forests around Periyar.'},

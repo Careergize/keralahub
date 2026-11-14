@@ -142,3 +142,27 @@
     @apply bg-white/10 text-brochure-gold;
   }
 }
+@keyframes travel-reveal {
+  from {opacity:0.25;transform:translateY(20px)}
+  to {opacity:1;transform:translateY(0)}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .section-reveal, .hero-content > * {
+    animation:travel-reveal 560ms ease-out both;
+  }
+  .hero-content > :nth-child(2) {animation-delay:90ms}
+  .hero-content > :nth-child(3) {animation-delay:180ms}
+  .hero-content > :nth-child(4) {animation-delay:270ms}
+  :is(.tour,.info,.journal,.pill,.outline,.holiday-button,.tab) {
+    transition:transform 200ms ease, background-color 200ms ease, box-shadow 200ms ease;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (hover:hover) {
+  :is(.tour,.info,.journal):hover {
+    transform:translateY(-4px);
+    box-shadow:0 12px 25px #372b411a;
+  }
+  :is(.pill,.outline,.holiday-button,.tab):hover {transform:translateY(-2px)}
+}

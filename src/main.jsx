@@ -1,5 +1,5 @@
 import InternationalTips from './InternationalTips';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {ArrowRight, Binoculars, CalendarDays, ChevronDown, ChevronLeft, ChevronRight, CircleUser, Compass, Globe, Heart, MapPin, Menu, MessageCircle, Search, X} from 'lucide-react';
 import {asset, experiences, regions, tours} from './data';
@@ -53,6 +53,20 @@ function TourCard({tour, onOpen}){
 }
 
 function App(){
+  useEffect(()=>{
+    const motion=window.matchMedia('(prefers-reduced-motion: reduce)');
+    if(!('IntersectionObserver' in window)) return;
+    const observer=new IntersectionObserver(entries=>{
+      for(const {target,isIntersecting} of entries){
+        if(!isIntersecting) continue;
+        observer.unobserve(target);
+        if(!motion.matches) target.classList.add('section-reveal');
+      }
+    },{threshold:0,rootMargin:'0px 0px -48px 0px'});
+    document.querySelectorAll('main > section:not(.hero), main > .search-wrap, main > .gallery, footer > .wrap')
+      .forEach(section=>observer.observe(section));
+    return ()=>observer.disconnect();
+  },[]);
   const [menu,setMenu]=useState(false);
   const [mode,setMode]=useState('Tours');
   const [destination,setDestination]=useState('');
@@ -133,7 +147,13 @@ function App(){
       <TravelBenefits/>
 
       <section className="wrap section" id="packages" ref={searchRef}>
-        <div className="section-head"><h2>{filter?.mode==='Experience'?'Travel Experiences':'Featured Travel Packages'}</h2><button className="outline" onClick={()=>setFilter(null)}>View all packages <ArrowRight size={16}/></button></div>
+        <div className="mb-7 grid justify-items-center gap-4 lg:grid-cols-[1fr_auto_1fr] lg:items-center"><h2 className="text-center lg:col-start-2">{filter?.mode==='Experience'?'Travel Experiences':'Best Selling Tours'}</h2><button className="outline lg:justify-self-end" onClick={()=>setFilter(null)}>View all packages <ArrowRight size={16}/></button></div>
+        {filter?.mode!=='Experience'&&<div className="mb-6 flex gap-2 overflow-x-auto py-1 sm:flex-wrap" role="group" aria-label="Tour category">
+          {['Adventure Tour','Family Tour','Group Tour','Honeymoon Tour','Solo Tour'].map(label=>{
+            const type=label==='Honeymoon Tour'?'Honeymoon':label;
+            return <button key={type} type="button" aria-pressed={filter?.category===type} className={'inline-flex shrink-0 items-center rounded-full border border-brand/20 px-4 py-2.5 text-sm font-semibold '+(filter?.category===type?'bg-brand text-white':'bg-white text-brand')} onClick={()=>setFilter({mode:'Tours',category:type})}>{label}</button>;
+          })}
+        </div>}
         {filter&&<p className="mb-5 text-neutral-600" role="status">{results.length} matching {results.length===1?'itinerary':'itineraries'}{filter.destination?' in '+filter.destination:''}{date?' for your trip on '+date:''}.</p>}
         <div className="cards">{results.map(tour=><TourCard key={tour.title} tour={tour} onOpen={tour=>setDialog({kind:'tour',tour})}/>)}</div>
         {!results.length&&<button className="pill" onClick={()=>plan(destination)}>Create a custom itinerary <ArrowRight size={16}/></button>}
