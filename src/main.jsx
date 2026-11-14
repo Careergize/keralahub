@@ -7,6 +7,7 @@ import Contact from './Contact';
 import Holidays from './Holidays';
 import Visa from './Visa';
 import HomeOffers from './HomeOffers';
+import {destinationPhotos} from './destinationPhotos';
 
 const isContact = ['/contact','/contact/'].includes(window.location.pathname);
 const isHolidays = ['/holidays','/holidays/'].includes(window.location.pathname);
@@ -26,20 +27,20 @@ function Brand(){
 function TourCard({tour, onOpen}){
   const [photo,setPhoto] = useState(0);
   const [saved,setSaved] = useState(false);
-  const images = [photos[tour.image-1],photos[tour.image%photos.length],photos[(tour.image+1)%photos.length]];
+  const images = tour.places.map(place=>destinationPhotos[place]);
   return <article className="tour">
     <div className="tour-photo group">
-      <img src={images[photo]} alt="" loading="lazy"/>
+      <img src={images[photo].src} alt={images[photo].alt} loading="lazy"/>
       <span className="tag">{tour.type}</span>
       <button className="save" aria-label={saved?'Remove saved tour':'Save tour'} aria-pressed={saved} onClick={()=>setSaved(!saved)}><Heart size={17} fill={saved?'currentColor':'none'}/></button>
-      <button className="slide prev" aria-label="Previous photo" onClick={()=>setPhoto((photo+2)%3)}><ChevronLeft size={17}/></button>
-      <button className="slide next" aria-label="Next photo" onClick={()=>setPhoto((photo+1)%3)}><ChevronRight size={17}/></button>
-      <div className="dots">{images.map((_,i)=><button key={i} aria-label={'Show photo '+(i+1)} className={photo===i?'selected':''} onClick={()=>setPhoto(i)}/>)}</div>
+      <button className="slide prev" aria-label="Previous photo" hidden={images.length===1} onClick={()=>setPhoto((photo+images.length-1)%images.length)}><ChevronLeft size={17}/></button>
+      <button className="slide next" aria-label="Next photo" hidden={images.length===1} onClick={()=>setPhoto((photo+1)%images.length)}><ChevronRight size={17}/></button>
+      <div className="dots">{images.length>1&&images.map((_,i)=><button key={i} aria-label={'Show photo '+(i+1)} className={photo===i?'selected':''} onClick={()=>setPhoto(i)}/>)}</div>
     </div>
     <div className="p-5">
       <div className="meta"><span><MapPin size={15}/> {tour.places[0]}</span><span><CalendarDays size={15}/> {tour.days} {tour.days===1?'Day':'Days'}</span></div>
       <button className="tour-title" onClick={()=>onOpen(tour)}>{tour.title}</button>
-      <p className="text-sm text-neutral-500">{tour.places.join('  ›  ')}</p>
+      <p className="mb-2 text-xs text-neutral-500">Photo by <a className="underline" href={images[photo].source}>{images[photo].author}</a> · <a className="underline" href={"https://creativecommons.org/licenses/"+images[photo].license+"/"}>CC {images[photo].license.replace("/"," ").toUpperCase()}</a></p><p className="text-sm text-neutral-500">{tour.places.join('  ›  ')}</p>
       <div className="tour-bottom"><span>Tailor-made itinerary</span><button className="pill" onClick={()=>onOpen(tour)}>View Tour <ArrowRight size={15}/></button></div>
     </div>
   </article>;
@@ -113,6 +114,18 @@ function App(){
         </div>
       </section>
 
+      <section className="wrap section grid items-center gap-10 lg:grid-cols-2" aria-labelledby="explore-heading">
+        <div>
+          <p className="mb-4 inline-flex rounded-full bg-[#e8f3ff] px-4 py-2 text-sm font-semibold text-brand">Best Travel Agency in Kerala</p>
+          <h2 id="explore-heading">Explore the World With Confidence.</h2>
+          <p className="mt-5 leading-7 text-neutral-600">Discover Kerala’s backwaters, tea gardens and historic towns, or plan a holiday abroad. Kerala Hub Holidays helps you find destinations and experiences that suit the way you like to travel.</p>
+          <p className="mt-4 leading-7 text-neutral-600">Tell us your dates, interests and who’s coming along. We’ll help shape an itinerary around the places and experiences you want to make time for.</p>
+          <a href="/holidays/" className="pill mt-7">Discover More <ArrowRight size={17}/></a>
+        </div>
+        <div className="relative mx-auto aspect-[1.45] w-full max-w-[560px]" aria-hidden="true">
+          {[2,3,1].map((image,index)=><img key={image} src={'https://atlastrip-wp.egenstheme.com/wp-content/uploads/2026/07/about-img'+image+'.webp'} alt="" loading="lazy" className={'absolute object-cover shadow-lg '+['left-[2%] top-[12%] h-[77%] w-[46%] -rotate-8 rounded-2xl','right-[2%] top-[12%] h-[77%] w-[46%] rotate-8 rounded-2xl','left-[29%] top-[5%] h-[90%] w-[42%] rounded-2xl border-4 border-white'][index]}/>)}
+        </div>
+      </section>
       <section className="wrap section" id="packages" ref={searchRef}>
         <div className="section-head"><h2>{filter?.mode==='Experience'?'Travel Experiences':'Featured Travel Packages'}</h2><button className="outline" onClick={()=>setFilter(null)}>View all packages <ArrowRight size={16}/></button></div>
         {filter&&<p className="mb-5 text-neutral-600" role="status">{results.length} matching {results.length===1?'itinerary':'itineraries'}{filter.destination?' in '+filter.destination:''}{date?' for your trip on '+date:''}.</p>}
@@ -123,7 +136,16 @@ function App(){
       <section className="section destinations" id="destinations">
         <div className="wrap text-center"><h2>Most Popular Destinations</h2>
           <div className="flex flex-wrap justify-center gap-3 my-7">{Object.keys(regions).map(name=><button key={name} className={'tab '+(region===name?'active':'')} aria-pressed={region===name} onClick={()=>setRegion(name)}><MapPin size={16}/>{name}</button>)}</div>
-          <div className="destination-grid">{regions[region].map(place=><button className="destination" key={place} onClick={()=>search(place,'Tours','')}><img src={photos[places.indexOf(place)]} alt="" loading="lazy"/><span>{place} <ArrowRight size={20}/></span></button>)}</div>
+          <div className="destination-grid">{regions[region].map(place=>{
+            const photo=destinationPhotos[place];
+            return <div key={place} className="w-full max-w-[365px]">
+              <button className="destination" onClick={()=>search(place,'Tours','')}>
+                <img src={photo.src} alt={photo.alt} loading="lazy"/>
+                <span>{place} <ArrowRight size={20}/></span>
+              </button>
+              <p className="mt-1 text-xs text-neutral-700">Photo by <a className="underline" href={photo.source}>{photo.author}</a> · <a className="underline" href={'https://creativecommons.org/licenses/'+photo.license+'/'}>CC {photo.license.replace('/',' ').toUpperCase()}</a></p>
+            </div>;
+          })}</div>
         </div>
       </section>
 
@@ -152,7 +174,7 @@ function App(){
 
     {dialog&&<Dialog onClose={()=>setDialog(null)} title={dialog.kind==='plan'?'Plan Your Kerala Holiday':dialog.kind==='tour'?dialog.tour.title:'Travel gallery'}>
       {dialog.kind==='image'&&<img className="w-full rounded-xl" src={asset('gallery-img-'+dialog.image+'.webp')} alt={'Travel gallery image '+dialog.image}/>}
-      {dialog.kind==='tour'&&<><img className="aspect-video w-full rounded-xl object-cover" src={photos[dialog.tour.image-1]} alt=""/><p className="my-4">{dialog.tour.detail}</p><p className="mb-5 text-neutral-600">{dialog.tour.days} {dialog.tour.days===1?'day':'days'} · {dialog.tour.places.join(' › ')}</p><button className="pill" onClick={()=>plan(dialog.tour.places[0])}>Plan This Trip <ArrowRight size={16}/></button></>}
+      {dialog.kind==='tour'&&<><img className="aspect-video w-full rounded-xl object-cover" src={destinationPhotos[dialog.tour.places[0]].src} alt={destinationPhotos[dialog.tour.places[0]].alt}/><p className="my-4">{dialog.tour.detail}</p><p className="mb-5 text-neutral-600">{dialog.tour.days} {dialog.tour.days===1?'day':'days'} · {dialog.tour.places.join(' › ')}</p><button className="pill" onClick={()=>plan(dialog.tour.places[0])}>Plan This Trip <ArrowRight size={16}/></button></>}
       {dialog.kind==='plan'&&<form className="plan-form" onSubmit={e=>{e.preventDefault();const data=new FormData(e.currentTarget);setSummary(tripPlace+' · '+tripDate+' · '+data.get('travelers')+' traveler(s)'+(data.get('preferences')?' · '+data.get('preferences'):''));}}>
         <label>Destination<select required value={tripPlace} onChange={e=>setTripPlace(e.target.value)}><option value="">Select destination</option>{places.map(p=><option key={p}>{p}</option>)}</select></label>
         <label>Travel date<input required type="date" value={tripDate} onChange={e=>setTripDate(e.target.value)}/></label>
