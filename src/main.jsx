@@ -1,3 +1,4 @@
+import InternationalTips from './InternationalTips';
 import React, {useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {ArrowRight, Binoculars, CalendarDays, ChevronDown, ChevronLeft, ChevronRight, CircleUser, Compass, Globe, Heart, MapPin, Menu, MessageCircle, Search, X} from 'lucide-react';
@@ -97,9 +98,9 @@ function App(){
           <div className="flex flex-wrap gap-3 sm:gap-4" aria-label="Travel type">{[['Tours',Globe],['Experience',Binoculars],['Visa',Compass]].map(([label,Icon])=><button key={label} className={'tab '+(mode===label?'active':'')} aria-pressed={mode===label} onClick={()=>{setMode(label);setCategory('')}}><Icon size={19}/>{label}</button>)}</div>
           {mode==='Visa'?<div className="visa-panel">Need help planning an international trip? <a className="pill" href="/visa-category/">Explore visa options <ArrowRight size={16}/></a></div>:
           <form className="finder" onSubmit={e=>{e.preventDefault();search()}}>
-            <label><MapPin/><span>Destination<select value={destination} onChange={e=>setDestination(e.target.value)}><option value="">Select destination</option>{places.map(p=><option key={p}>{p}</option>)}</select></span></label>
+            <label><MapPin/><span>Destination<select aria-label="Destination" value={destination} onChange={e=>setDestination(e.target.value)}><option value="">Select destination</option>{places.map(p=><option key={p}>{p}</option>)}</select></span></label>
             <label><CalendarDays/><span>Travel date<input type="date" value={date} onChange={e=>setDate(e.target.value)}/></span></label>
-            <label><Compass/><span>Category<select value={category} onChange={e=>setCategory(e.target.value)}><option value="">Select category</option>{[...new Set((mode==='Tours'?tours:experiences).map(t=>t.type))].map(t=><option key={t}>{t}</option>)}</select></span></label>
+            <label><Compass/><span>Category<select aria-label="Category" value={category} onChange={e=>setCategory(e.target.value)}><option value="">Select category</option>{[...new Set((mode==='Tours'?tours:experiences).map(t=>t.type))].map(t=><option key={t}>{t}</option>)}</select></span></label>
             <button className="pill" type="submit"><Search size={18}/> Search</button>
           </form>}
           <p className="search-note">Can’t find what you’re looking for? <button onClick={()=>plan(destination)}>Create</button> your custom itinerary.</p>
@@ -156,24 +157,7 @@ function App(){
             <h2 id="inspiration-heading">Travel Tips &amp; Inspirations.</h2>
           </div>
           <div className="cards">
-            {experiences.map((item,i)=>{
-              const title=['What to expect on a backwater cruise','Planning a trip to Munnar’s tea country','A walking guide to Fort Kochi'][i];
-              const tip=[
-                'Ask which canals the route covers and whether meals are included. A daytime cruise works well for a short visit, while an overnight stay gives you more time on the water.',
-                'Leave time for a tea estate visit and a tasting. Pack a light layer for cooler mornings and check whether the estate requires advance booking.',
-                'Start near the Chinese fishing nets, then walk toward St. Francis Church and the heritage streets. An early start gives you time to explore before the midday heat.',
-              ][i];
-              const photo=destinationPhotos[item.places[0]];
-              return <article key={item.title}>
-                <div className="relative overflow-hidden rounded-2xl bg-neutral-100">
-                  <img src={photo.src} alt={photo.alt} loading="lazy" className="h-[280px] w-full object-cover"/>
-                  <span className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-medium"><MapPin size={15}/> {item.places[0]}</span>
-                </div>
-                <h3 className="mt-4 text-xl">{title}</h3>
-                <button className="outline mt-4" aria-label={'Read more about '+title} onClick={()=>setDialog({kind:'tour',tour:{...item,title,detail:tip}})}>Read More <ArrowRight size={16}/></button>
-                <p className="mt-3 text-xs text-neutral-500">Photo by <a className="underline" href={photo.source}>{photo.author}</a> · <a className="underline" href={'https://creativecommons.org/licenses/'+photo.license+'/'}>CC {photo.license.replace('/',' ').toUpperCase()}</a></p>
-              </article>;
-            })}
+            <InternationalTips onRead={guide=>setDialog({kind:'guide',guide})}/>
           </div>
         </div>
       </section>
@@ -188,7 +172,8 @@ function App(){
       </div>
     </footer>
 
-    {dialog&&<Dialog onClose={()=>setDialog(null)} title={dialog.kind==='plan'?'Plan Your Kerala Holiday':dialog.kind==='tour'?dialog.tour.title:'Travel gallery'}>
+    {dialog&&<Dialog onClose={()=>setDialog(null)} title={dialog.kind==='plan'?'Plan Your Kerala Holiday':dialog.kind==='tour'?dialog.tour.title:dialog.kind==='guide'?dialog.guide.title:'Travel gallery'}>
+      {dialog.kind==='guide'&&<p className="leading-7">{dialog.guide.tip}</p>}
       {dialog.kind==='image'&&<img className="w-full rounded-xl" src={asset('gallery-img-'+dialog.image+'.webp')} alt={'Travel gallery image '+dialog.image}/>}
       {dialog.kind==='tour'&&<><img className="aspect-video w-full rounded-xl object-cover" src={destinationPhotos[dialog.tour.places[0]].src} alt={destinationPhotos[dialog.tour.places[0]].alt}/><p className="my-4">{dialog.tour.detail}</p><p className="mb-5 text-neutral-600">{dialog.tour.days} {dialog.tour.days===1?'day':'days'} · {dialog.tour.places.join(' › ')}</p><button className="pill" onClick={()=>plan(dialog.tour.places[0])}>Plan This Trip <ArrowRight size={16}/></button></>}
       {dialog.kind==='plan'&&<form className="plan-form" onSubmit={e=>{e.preventDefault();const data=new FormData(e.currentTarget);setSummary(tripPlace+' · '+tripDate+' · '+data.get('travelers')+' traveler(s)'+(data.get('preferences')?' · '+data.get('preferences'):''));}}>

@@ -49,11 +49,12 @@
   .search-box {@apply rounded-2xl bg-white p-5 shadow-[0_8px_36px_#12295217] md:p-[30px];}
   .tab {@apply inline-flex items-center gap-1.5 rounded-full bg-[#e8f3ff] px-4 py-2.5 text-sm font-semibold text-brand hover:bg-blue-100;}
   .tab.active {@apply bg-brand text-white;}
-  .finder {@apply my-5 grid items-stretch gap-2 rounded-xl border border-neutral-200 p-2 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_auto];}
-  .finder label {@apply flex min-w-0 items-center gap-3 rounded-lg px-3 py-2 text-sm text-neutral-500 lg:border-r lg:border-neutral-200;}
+  .finder {@apply my-5 grid items-stretch gap-3 lg:grid-cols-[repeat(3,minmax(0,1fr))_auto];}
+  .finder label {@apply flex min-w-0 items-center gap-3 rounded-xl border border-neutral-200 bg-neutral-50 px-3 pt-2 text-sm font-medium text-neutral-700 focus-within:border-brand;}
   .finder label svg {@apply shrink-0 text-brand;}
   .finder label span {@apply min-w-0 flex-1;}
-  .finder :is(select,input) {@apply block w-full min-w-0 bg-transparent pt-1 font-medium text-neutral-900;}
+  .finder :is(select,input) {@apply block min-h-11 w-full min-w-0 bg-transparent pb-1 text-base font-medium text-neutral-900;}
+  .finder > button {@apply min-h-12 w-full rounded-xl lg:w-auto;}
   .search-note {@apply text-sm text-neutral-500;}
   .search-note button {@apply font-semibold text-brand underline;}
   .visa-panel {@apply my-5 flex flex-wrap items-center gap-4 rounded-lg border border-neutral-200 p-4;}
