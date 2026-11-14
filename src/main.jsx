@@ -7,6 +7,7 @@ import Contact from './Contact';
 import Holidays from './Holidays';
 import Visa from './Visa';
 import HomeOffers from './HomeOffers';
+import TopDestinations from './TopDestinations';
 import {destinationPhotos} from './destinationPhotos';
 
 const isContact = ['/contact','/contact/'].includes(window.location.pathname);
@@ -53,7 +54,6 @@ function App(){
   const [category,setCategory]=useState('');
   const [date,setDate]=useState('');
   const [filter,setFilter]=useState(null);
-  const [region,setRegion]=useState('Hill Stations');
   const [dialog,setDialog]=useState(null);
   const [tripPlace,setTripPlace]=useState('');
   const [tripDate,setTripDate]=useState('');
@@ -133,21 +133,7 @@ function App(){
         {!results.length&&<button className="pill" onClick={()=>plan(destination)}>Create a custom itinerary <ArrowRight size={16}/></button>}
       </section>
 
-      <section className="section destinations" id="destinations">
-        <div className="wrap text-center"><h2>Most Popular Destinations</h2>
-          <div className="flex flex-wrap justify-center gap-3 my-7">{Object.keys(regions).map(name=><button key={name} className={'tab '+(region===name?'active':'')} aria-pressed={region===name} onClick={()=>setRegion(name)}><MapPin size={16}/>{name}</button>)}</div>
-          <div className="destination-grid">{regions[region].map(place=>{
-            const photo=destinationPhotos[place];
-            return <div key={place} className="w-full max-w-[365px]">
-              <button className="destination" onClick={()=>search(place,'Tours','')}>
-                <img src={photo.src} alt={photo.alt} loading="lazy"/>
-                <span>{place} <ArrowRight size={20}/></span>
-              </button>
-              <p className="mt-1 text-xs text-neutral-700">Photo by <a className="underline" href={photo.source}>{photo.author}</a> · <a className="underline" href={'https://creativecommons.org/licenses/'+photo.license+'/'}>CC {photo.license.replace('/',' ').toUpperCase()}</a></p>
-            </div>;
-          })}</div>
-        </div>
-      </section>
+      <TopDestinations/>
 
       <section className="wrap section customize">
         <div><h2>Need a Customized Package?</h2><p className="my-4">Create your custom travel journey in just 03 steps.</p><ol className="steps"><li>Choose a destination.</li><li>Select your travel date.</li><li>Add your travel preferences.</li></ol><button className="pill" onClick={()=>plan()}>Select Destination <ArrowRight size={16}/></button></div>

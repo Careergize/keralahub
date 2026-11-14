@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {ArrowRight, ChevronDown, ChevronRight, Compass, MapPin, MessageCircle} from 'lucide-react';
-import {regions} from './data';
+import {regions, topDestinations} from './data';
 import './contact.css';
 
-const internationalDestinations = ['Morocco','Jordan','Vietnam','Saudi Arabia'];
+const internationalDestinations = ['Morocco','Vietnam',...topDestinations.map(([name])=>name)];
 
 const questions = [
   ['What services does Kerala Hub Holidays provide?', 'Explore Kerala tour packages, local experiences and custom itineraries for backwater cruises, hill stations, heritage walks and more.'],

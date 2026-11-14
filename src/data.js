@@ -22,3 +22,8 @@ export const experiences = [
   {title:'Munnar Tea Trail', places:['Munnar'], type:'Hill Stations', days:1, image:2, detail:'Follow the trails through Munnar’s tea estates.'},
   {title:'Fort Kochi Heritage Walk', places:['Kochi'], type:'Heritage', days:1, image:4, detail:'Explore the lanes, waterfront and architecture of Fort Kochi on foot.'},
 ];
+
+export const topDestinations = [
+  ['Jordan',1], ['Saudi Arabia',2], ['Qatar',3], ['United Arab Emirates',4],
+  ['Papua New Guinea',5], ['New Zealand',6], ['Australia',7], ['Costa Rica',26], ['Mexico',8],
+];
