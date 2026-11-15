@@ -126,10 +126,12 @@ function App(){
 
       <HomeOffers/>
 
-      <section className="wrap section about" id="about">
+      <section className="section about" id="about">
+        <div className="wrap">
         <div className="avatars">{[1,2,3,4].map(i=><img key={i} src={asset('travel-partner-img'+i+'.png')} alt="" loading="lazy"/>)}</div>
         <h2>Kerala Hub Holidays, Your Travel Partner!</h2>
         <p className="intro">Explore Kerala with personalized itineraries, curated tour packages and local travel guidance.</p>
+        </div>
       </section>
 
       <section className="wrap section grid items-center gap-10 lg:grid-cols-2" aria-labelledby="explore-heading">

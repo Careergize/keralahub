@@ -58,7 +58,8 @@
   .search-note {@apply text-sm text-neutral-500;}
   .search-note button {@apply font-semibold text-brand underline;}
   .visa-panel {@apply my-5 flex flex-wrap items-center gap-4 rounded-lg border border-neutral-200 p-4;}
-  .about {@apply text-center;}
+  .about {@apply bg-brochure-plum text-center text-white;}
+  .about .intro {@apply text-brochure-lavender;}
   .avatars {@apply mb-5 flex justify-center -space-x-2;}
   .avatars img {@apply size-12 rounded-full border-2 border-white object-cover;}
   .intro {@apply mx-auto mt-4 mb-9 max-w-[700px] text-neutral-600;}
