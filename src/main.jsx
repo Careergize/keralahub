@@ -130,9 +130,6 @@ function App(){
         <div className="avatars">{[1,2,3,4].map(i=><img key={i} src={asset('travel-partner-img'+i+'.png')} alt="" loading="lazy"/>)}</div>
         <h2>Kerala Hub Holidays, Your Travel Partner!</h2>
         <p className="intro">Explore Kerala with personalized itineraries, curated tour packages and local travel guidance.</p>
-        <div className="grid gap-5 md:grid-cols-3">
-          {['Historical Landmark Itinerary','Expert Private Tour Guide','Handpicked Travel Experience'].map((title,i)=><article className="info" key={title}><img src={asset('travel-info-card-img'+(i+1)+'.svg')} alt=""/><h3>{title}</h3><p>{['Explore the forts, palaces and historic streets that tell Kerala’s story.','Discover local stories and favorite spots with a private guide.','Make time for the places and experiences you want to see most.'][i]}</p></article>)}
-        </div>
       </section>
 
       <section className="wrap section grid items-center gap-10 lg:grid-cols-2" aria-labelledby="explore-heading">

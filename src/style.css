@@ -62,9 +62,6 @@
   .avatars {@apply mb-5 flex justify-center -space-x-2;}
   .avatars img {@apply size-12 rounded-full border-2 border-white object-cover;}
   .intro {@apply mx-auto mt-4 mb-9 max-w-[700px] text-neutral-600;}
-  .info {@apply rounded-2xl border border-neutral-200 bg-[#f7faff] p-6;}
-  .info img {@apply mx-auto mb-4 size-16 object-contain;}
-  .info p {@apply mt-2 text-sm leading-6 text-neutral-600;}
   .offers {@apply grid grid-cols-2 gap-4 lg:grid-cols-4;}
   .offers img {@apply w-full rounded-xl object-cover;}
   .section-head {@apply mb-7 flex flex-wrap items-center justify-between gap-4;}
@@ -154,13 +151,13 @@
   .hero-content > :nth-child(2) {animation-delay:90ms}
   .hero-content > :nth-child(3) {animation-delay:180ms}
   .hero-content > :nth-child(4) {animation-delay:270ms}
-  :is(.tour,.info,.journal,.pill,.outline,.holiday-button,.tab) {
+  :is(.tour,.journal,.pill,.outline,.holiday-button,.tab) {
     transition:transform 200ms ease, background-color 200ms ease, box-shadow 200ms ease;
   }
 }
 
 @media (prefers-reduced-motion: no-preference) and (hover:hover) {
-  :is(.tour,.info,.journal):hover {
+  :is(.tour,.journal):hover {
     transform:translateY(-4px);
     box-shadow:0 12px 25px #372b411a;
   }
