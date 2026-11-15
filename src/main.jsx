@@ -1,5 +1,5 @@
 import {openWhatsAppEnquiry} from './whatsapp';
-import InternationalTips from './InternationalTips';
+import Testimonials from './Testimonials';
 import React, {useEffect, useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {ArrowRight, Binoculars, CalendarDays, ChevronDown, ChevronLeft, ChevronRight, CircleUser, Compass, Globe, Heart, MapPin, Menu, MessageCircle, Search, X} from 'lucide-react';
@@ -172,30 +172,19 @@ function App(){
         <div className="cards">{experiences.map(tour=><TourCard key={tour.title} tour={tour} onOpen={tour=>setDialog({kind:'tour',tour})}/>)}</div>
       </section>
 
-      <section className="section" id="inspiration" aria-labelledby="inspiration-heading">
-        <div className="wrap">
-          <div className="mb-8 md:mb-14">
-            <p className="mb-2 text-sm font-semibold text-brand">Get to know more with Kerala hub</p>
-            <h2 id="inspiration-heading">Travel Tips &amp; Inspirations.</h2>
-          </div>
-          <div className="cards">
-            <InternationalTips onRead={guide=>setDialog({kind:'guide',guide})}/>
-          </div>
-        </div>
-      </section>
+      <Testimonials/>
       <div className="gallery" aria-label="Travel gallery">{[1,2,3,4,5].map(i=><button key={i} aria-label={'Open gallery image '+i} onClick={()=>setDialog({kind:'image',image:i})}><img src={asset('gallery-img-'+i+'.webp')} alt="" loading="lazy"/></button>)}</div>
     </main>}
 
     <footer id="contact">
       <div className="wrap">
         <div className="newsletter"><div><h2>Get travel ideas from Kerala Hub Holidays</h2><p>Save your email for this browser preview.</p></div><form onSubmit={e=>{e.preventDefault();const email=new FormData(e.currentTarget).get('email');localStorage.setItem('kerala-newsletter',email);setNewsletter('Email saved on this device.');}}><label className="sr-only" htmlFor="newsletter-email">Email address</label><input id="newsletter-email" name="email" type="email" placeholder="Your email address" required/><button className="pill">Subscribe <ArrowRight size={16}/></button><p role="status">{newsletter}</p></form></div>
-        <div className="footer-links"><div><Brand/><p className="mt-4">Kerala, India</p></div><div><h3>Explore</h3><a href="/#about">About us</a><a href="/holidays/">Holiday packages</a><a href="/#inspiration">Travel inspirations</a></div><div><h3>Plan Your Trip</h3><a href="/#destinations">Destinations</a><a href="/#experiences">Experiences</a><a href="/contact/">Contact Us</a><button onClick={()=>plan()}>Custom itinerary</button></div></div>
+        <div className="footer-links"><div><Brand/><p className="mt-4">Kerala, India</p></div><div><h3>Explore</h3><a href="/#about">About us</a><a href="/holidays/">Holiday packages</a><a href="/#testimonials">Testimonials</a></div><div><h3>Plan Your Trip</h3><a href="/#destinations">Destinations</a><a href="/#experiences">Experiences</a><a href="/contact/">Contact Us</a><button onClick={()=>plan()}>Custom itinerary</button></div></div>
         <p className="copyright">© {new Date().getFullYear()} Kerala Hub Holidays. All rights reserved.</p>
       </div>
     </footer>
 
-    {dialog&&<Dialog onClose={()=>setDialog(null)} title={dialog.kind==='plan'?'Plan Your Kerala Holiday':dialog.kind==='tour'?dialog.tour.title:dialog.kind==='guide'?dialog.guide.title:'Travel gallery'}>
-      {dialog.kind==='guide'&&<p className="leading-7">{dialog.guide.tip}</p>}
+    {dialog&&<Dialog onClose={()=>setDialog(null)} title={dialog.kind==='plan'?'Plan Your Kerala Holiday':dialog.kind==='tour'?dialog.tour.title:'Travel gallery'}>
       {dialog.kind==='image'&&<img className="w-full rounded-xl" src={asset('gallery-img-'+dialog.image+'.webp')} alt={'Travel gallery image '+dialog.image}/>}
       {dialog.kind==='tour'&&<><img className="aspect-video w-full rounded-xl object-cover" src={destinationPhotos[dialog.tour.places[0]].src} alt={destinationPhotos[dialog.tour.places[0]].alt}/><p className="my-4">{dialog.tour.detail}</p><p className="mb-5 text-neutral-600">{dialog.tour.days} {dialog.tour.days===1?'day':'days'} · {dialog.tour.places.join(' › ')}</p><button className="pill" onClick={()=>plan(dialog.tour.places[0])}>Plan This Trip <ArrowRight size={16}/></button></>}
       {dialog.kind==='plan'&&<form className="plan-form" onSubmit={e=>{e.preventDefault();const data=new FormData(e.currentTarget);openWhatsAppEnquiry('Kerala Hub Holidays — Custom Trip Enquiry', [['Destination',tripPlace],['Travel date',tripDate],['Travelers',data.get('travelers')],['Preferences',data.get('preferences')]]);}}>
