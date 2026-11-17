@@ -32,7 +32,9 @@ const currentService = additionalServices.find(service => service.path === curre
 const isServicePage = serviceLinks.some(([, path]) => path === currentPath);
 if (currentService) document.title = currentService.title + ' | Kerala Hub Holidays';
 
-const isDashboard = ['/dashboard','/dashboard/'].includes(window.location.pathname);
+const adminViews = {'/dashboard/': 'Dashboard', '/dashboard/customers/': 'Customers', '/dashboard/bookings/': 'Bookings'};
+const adminView = adminViews[currentPath];
+const isDashboard = Boolean(adminView);
 const isLogin = isDashboard || ['/login','/login/'].includes(window.location.pathname);
 const isContact = ['/contact','/contact/'].includes(window.location.pathname);
 const isHolidays = ['/holidays','/holidays/'].includes(window.location.pathname);
@@ -43,7 +45,8 @@ if (isCarRentals) document.title = 'Car Rentals | Kerala Hub Holidays';
 if (isHotels) document.title = 'Hotels | Kerala Hub Holidays';
 if (isVisa) document.title = 'Visa Processing | Kerala Hub Holidays';
 if (isDashboard && sessionStorage.getItem('kerala-hub-demo-admin') !== 'admin') window.location.replace('/login/');
-if (isDashboard) document.title = 'Admin Dashboard | Kerala Hub Holidays';
+if (isDashboard && adminView !== 'Dashboard') document.title = adminView + ' | Kerala Hub Holidays';
+else if (isDashboard) document.title = 'Admin Dashboard | Kerala Hub Holidays';
 else if (isLogin) document.title = 'Sign In | Kerala Hub Holidays';
 if (isContact) document.title = 'Contact Us | Kerala Hub Holidays';
 if (isHolidays) document.title = 'Vacation Packages | Kerala Hub Holidays';
@@ -171,7 +174,7 @@ function App(){
       <button className="mobile-toggle" aria-label="Toggle navigation" aria-expanded={menu} onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button>
     </header>
 
-    {currentService?<ServicePage service={currentService}/>:isLogin?<Login showDashboard={isDashboard}/>:isCarRentals?<CarRentals/>:isHotels?<Hotels/>:isVisa?<Visa/>:isContact?<Contact/>:isHolidays?<Holidays renderTour={tour=><TourCard key={tour.title} tour={tour} onOpen={tour=>setDialog({kind:'tour',tour})}/>}/>:<main>
+    {currentService?<ServicePage service={currentService}/>:isLogin?<Login showDashboard={isDashboard} adminView={adminView}/>:isCarRentals?<CarRentals/>:isHotels?<Hotels/>:isVisa?<Visa/>:isContact?<Contact/>:isHolidays?<Holidays renderTour={tour=><TourCard key={tour.title} tour={tour} onOpen={tour=>setDialog({kind:'tour',tour})}/>}/>:<main>
       <section className="hero">
         <video src={asset('travel-agency-banner-video.mp4')} autoPlay muted loop playsInline aria-hidden="true"/>
         <div className="hero-content">

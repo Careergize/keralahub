@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {ArrowLeft, LogIn} from 'lucide-react';
+import {ArrowLeft, CalendarDays, LayoutDashboard, LogIn, Users} from 'lucide-react';
 import {destinationPhotos} from './destinationPhotos';
 import './login.css';
 
@@ -7,7 +7,7 @@ const photo = destinationPhotos.Alappuzha;
 
 const demoSessionKey = 'kerala-hub-demo-admin';
 
-export default function Login({showDashboard = false}){
+export default function Login({showDashboard = false, adminView = 'Dashboard'}){
   const [error, setError] = useState('');
 
   function signIn(event){
@@ -27,11 +27,25 @@ export default function Login({showDashboard = false}){
   }
 
   if (showDashboard && sessionStorage.getItem(demoSessionKey) === 'admin'){
-    return <main className="section wrap">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-3xl font-semibold text-brand-dark">Admin Dashboard</h1>
+    return <main className="section wrap grid gap-6 md:grid-cols-[14rem_minmax(0,1fr)]">
+      <aside className="rounded-2xl bg-brand-dark p-4 text-white md:min-h-80">
+        <p className="mb-4 px-3 font-semibold">Admin menu</p>
+        <nav aria-label="Admin navigation">
+          {[
+            {label: 'Dashboard', href: '/dashboard/', icon: LayoutDashboard, active: adminView === 'Dashboard'},
+            {label: 'Customers', href: '/dashboard/customers/', icon: Users, active: adminView === 'Customers'},
+            {label: 'Bookings', href: '/dashboard/bookings/', icon: CalendarDays, active: adminView === 'Bookings'},
+          ].map(({label, href, icon: Icon, active}) => <a key={href} href={href} aria-current={active ? 'page' : undefined} className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-white/10 aria-[current=page]:bg-white/15">
+            <Icon size={18} aria-hidden="true"/> {label}
+          </a>)}
+        </nav>
+      </aside>
+      <section aria-labelledby="dashboard-title" className="min-w-0 rounded-2xl bg-brand-tint p-5 sm:p-7">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+        <h1 id="dashboard-title" className="text-3xl font-semibold text-brand-dark">{adminView === 'Dashboard' ? 'Admin Dashboard' : adminView}</h1>
         <button type="button" className="outline" onClick={signOut}>Sign out</button>
       </div>
+      {adminView !== 'Dashboard' ? <p className="mt-3 text-neutral-700">No {adminView.toLowerCase()} to display.</p> : <>
       <p className="mt-3 text-neutral-700">Welcome, admin. This dashboard displays sample data.</p>
       <dl className="mt-8 grid gap-4 sm:grid-cols-3">
         {[['Bookings', '12'], ['Open enquiries', '5'], ['Active packages', '8']].map(([label, value]) =>
@@ -40,7 +54,8 @@ export default function Login({showDashboard = false}){
             <dd className="mt-2 text-3xl font-semibold text-brand-dark">{value}</dd>
           </div>
         )}
-      </dl>
+      </dl></>}
+      </section>
     </main>;
   }
   return <main className="section wrap">
