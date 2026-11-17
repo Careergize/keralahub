@@ -35,6 +35,7 @@ if (currentService) document.title = currentService.title + ' | Kerala Hub Holid
 const adminViews = {'/dashboard/': 'Dashboard', '/dashboard/customers/': 'Customers', '/dashboard/bookings/': 'Bookings'};
 const adminView = adminViews[currentPath];
 const isDashboard = Boolean(adminView);
+const adminWebAppUrl = import.meta.env.VITE_ADMIN_WEB_APP_URL;
 const isLogin = isDashboard || ['/login','/login/'].includes(window.location.pathname);
 const isContact = ['/contact','/contact/'].includes(window.location.pathname);
 const isHolidays = ['/holidays','/holidays/'].includes(window.location.pathname);
@@ -44,7 +45,8 @@ const isCarRentals = ['/transport','/transport/'].includes(window.location.pathn
 if (isCarRentals) document.title = 'Car Rentals | Kerala Hub Holidays';
 if (isHotels) document.title = 'Hotels | Kerala Hub Holidays';
 if (isVisa) document.title = 'Visa Processing | Kerala Hub Holidays';
-if (isDashboard && sessionStorage.getItem('kerala-hub-demo-admin') !== 'admin') window.location.replace('/login/');
+if (isLogin && adminWebAppUrl) window.location.replace(adminWebAppUrl);
+else if (isDashboard && sessionStorage.getItem('kerala-hub-demo-admin') !== 'admin') window.location.replace('/login/');
 if (isDashboard && adminView !== 'Dashboard') document.title = adminView + ' | Kerala Hub Holidays';
 else if (isDashboard) document.title = 'Admin Dashboard | Kerala Hub Holidays';
 else if (isLogin) document.title = 'Sign In | Kerala Hub Holidays';
@@ -173,7 +175,7 @@ function App(){
       </button>}
       {!isDashboard && <><nav className={menu?'nav open':'nav'} aria-label="Main navigation">{links.map(([label,href],i)=>label==='Services'?<details className='pages-dropdown relative' key={label} onKeyDown={event=>{if(event.key==='Escape'){event.currentTarget.open=false;event.currentTarget.querySelector('summary').focus();}}}><summary className={isServicePage?'active':''}>Services <ChevronDown size={13}/></summary><div><a href='/#about'>About Us</a>{serviceLinks.map(([name, path]) => <a key={path} href={path} aria-current={currentPath === path ? 'page' : undefined}>{name}</a>)}</div></details>:<a key={href} href={href.startsWith("#")?"/"+href:href} onClick={()=>setMenu(false)} className={i===(isVisa||isHotels||isLogin||isCarRentals||currentService?-1:isContact?4:isHolidays?3:0)?'active':''}>{label}</a>)}</nav>
       <div className="header-actions"><span><Globe size={17}/> INR</span><button aria-label="Open trip planner" onClick={()=>plan()}><CircleUser size={19}/></button><a className="pill" href="/contact/"><MessageCircle size={17}/> Contact Us</a></div>
-      <a href="/login/" aria-current={isLogin?'page':undefined} className="header-login"><LogIn size={16} aria-hidden="true"/> Login</a>
+      <a href={adminWebAppUrl || "/login/"} aria-current={isLogin?'page':undefined} className="header-login"><LogIn size={16} aria-hidden="true"/> Login</a>
       <button className="mobile-toggle" aria-label="Toggle navigation" aria-expanded={menu} onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button></>}
     </header>
 
