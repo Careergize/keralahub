@@ -1,6 +1,6 @@
 import React, {useRef, useState} from 'react';
 import {Car, MessageCircle, Search, Users} from 'lucide-react';
-import {openWhatsAppEnquiry} from './whatsapp';
+import {openWhatsAppEnquiry, whatsappUrl} from './whatsapp';
 
 const vehicles = [
   {type:'Compact car', seats:4, image:19, dailyRate:2000},
@@ -60,7 +60,7 @@ export default function CarRentals(){
 
   return <main>
     <section className="mx-[1.2%] grid min-h-[594px] content-center gap-6 rounded-2xl bg-slate-700 bg-cover bg-center px-4 py-12 text-center text-white" style={{backgroundImage:'linear-gradient(#0005,#0006),url('+banner+')'}}>
-      <h1 className="text-4xl font-semibold md:text-[60px]">Transport</h1>
+      <h1 className="text-4xl font-semibold md:text-[60px]">Car &amp; Bus Rentals</h1>
       <form ref={form} onSubmit={search} className="mx-auto grid w-full max-w-[1320px] items-end gap-4 rounded-2xl bg-white px-5 py-7 md:px-9 md:pb-10 text-left text-neutral-900 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1.2fr_1fr_auto]">
         <div className="col-span-full flex w-fit rounded-full bg-brand-tint text-sm font-medium text-brand">
           <button type="button" aria-pressed={service==='rent'} className={service==='rent'?'pill py-1.5':'px-3 py-1.5'} onClick={()=>setService('rent')}>For Rent</button>
@@ -68,7 +68,7 @@ export default function CarRentals(){
         </div>
         {service==='ticket'?<div className="col-span-full flex flex-wrap items-center justify-between gap-4">
           <p>Enquire about train or bus tickets.</p>
-          <a className="pill" href="/contact/?message=I%20would%20like%20to%20enquire%20about%20transport%20tickets.#enquiry">Enquire about tickets</a>
+          <a className="pill" href="/train-bus-tickets/">Enquire about tickets</a>
         </div>:<>
         <label className="grid gap-1 text-sm font-medium">Pick-up location<input className={field} name="Pick-up location" placeholder="e.g. Kochi Airport" required/></label>
         <label className="grid gap-1 text-sm font-medium">Drop-off location<input className={field} name="Drop-off location" placeholder="e.g. Munnar" required/></label>
@@ -78,6 +78,14 @@ export default function CarRentals(){
         </>}
       </form>
       <p className="font-medium">Airport transfers, sightseeing and multi-day rentals across Kerala.</p>
+    </section>
+
+    <section className="wrap flex flex-wrap items-center justify-between gap-4 py-6" aria-labelledby="bus-rentals">
+      <div>
+        <h2 id="bus-rentals" className="text-xl font-semibold text-brand-dark">Group bus rentals</h2>
+        <p className="mt-1 text-neutral-700">Share your route, travel dates, and passenger count for a quote.</p>
+      </div>
+      <a className="outline" href={whatsappUrl('Hello, I would like to enquire about a group bus rental.')}><MessageCircle size={17} aria-hidden="true"/> Enquire about bus rentals</a>
     </section>
 
     <section ref={results} className="wrap section grid items-start gap-6 lg:grid-cols-[minmax(230px,1fr)_minmax(0,2.07fr)]" aria-labelledby="rental-heading">
