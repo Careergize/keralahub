@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {ArrowLeft, CalendarDays, LayoutDashboard, LogIn, Users} from 'lucide-react';
+import {ArrowLeft, CalendarDays, LayoutDashboard, LogIn, LogOut, ShieldCheck, Users} from 'lucide-react';
 import {destinationPhotos} from './destinationPhotos';
 import './login.css';
 
@@ -27,23 +27,30 @@ export default function Login({showDashboard = false, adminView = 'Dashboard'}){
   }
 
   if (showDashboard && sessionStorage.getItem(demoSessionKey) === 'admin'){
-    return <main className="section wrap grid gap-6 md:grid-cols-[14rem_minmax(0,1fr)]">
-      <aside className="rounded-2xl bg-brand-dark p-4 text-white md:min-h-80">
-        <p className="mb-4 px-3 font-semibold">Admin menu</p>
-        <nav aria-label="Admin navigation">
+    return <main className="section grid w-full gap-5 px-4 sm:px-6 md:grid-cols-[15rem_minmax(0,1fr)] lg:px-8">
+      <aside className="flex flex-col gap-4 rounded-2xl border border-neutral-200 bg-white p-3 text-brand-dark shadow-sm md:min-h-96 md:p-4">
+        <div className="flex items-center gap-3 border-b border-neutral-200 px-2 pb-4">
+          <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-brand text-white"><ShieldCheck size={19} aria-hidden="true"/></span>
+          <p className="text-sm font-semibold">Kerala Hub Admin</p>
+        </div>
+        <nav aria-label="Admin navigation" className="flex flex-wrap gap-1 md:flex-col">
           {[
             {label: 'Dashboard', href: '/dashboard/', icon: LayoutDashboard, active: adminView === 'Dashboard'},
             {label: 'Customers', href: '/dashboard/customers/', icon: Users, active: adminView === 'Customers'},
             {label: 'Bookings', href: '/dashboard/bookings/', icon: CalendarDays, active: adminView === 'Bookings'},
-          ].map(({label, href, icon: Icon, active}) => <a key={href} href={href} aria-current={active ? 'page' : undefined} className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-white/10 aria-[current=page]:bg-white/15">
+          ].map(({label, href, icon: Icon, active}) => <a key={href} href={href} aria-current={active ? 'page' : undefined} className="flex min-h-11 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-brand aria-[current=page]:bg-brand-tint aria-[current=page]:font-semibold aria-[current=page]:text-brand-dark aria-[current=page]:ring-1 aria-[current=page]:ring-brand/25">
             <Icon size={18} aria-hidden="true"/> {label}
           </a>)}
         </nav>
+        <div className="border-t border-neutral-200 pt-3 md:mt-auto">
+          <button type="button" className="flex min-h-11 w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-brand" onClick={signOut}>
+            <LogOut size={18} aria-hidden="true"/> Sign out
+          </button>
+        </div>
       </aside>
       <section aria-labelledby="dashboard-title" className="min-w-0 rounded-2xl bg-brand-tint p-5 sm:p-7">
         <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 id="dashboard-title" className="text-3xl font-semibold text-brand-dark">{adminView === 'Dashboard' ? 'Admin Dashboard' : adminView}</h1>
-        <button type="button" className="outline" onClick={signOut}>Sign out</button>
       </div>
       {adminView !== 'Dashboard' ? <p className="mt-3 text-neutral-700">No {adminView.toLowerCase()} to display.</p> : <>
       <p className="mt-3 text-neutral-700">Welcome, admin. This dashboard displays sample data.</p>
