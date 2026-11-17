@@ -168,6 +168,9 @@ function App(){
   return <>
     <header id="home" className="site-header">
       <Brand/>
+      {isDashboard && <button type="button" className="ml-auto rounded-lg p-2 hover:bg-white/10 md:hidden" aria-label="Open admin menu" aria-haspopup="dialog" aria-controls="mobile-admin-menu" onClick={()=>document.getElementById('mobile-admin-menu')?.showModal()}>
+        <Menu size={24} aria-hidden="true"/>
+      </button>}
       {!isDashboard && <><nav className={menu?'nav open':'nav'} aria-label="Main navigation">{links.map(([label,href],i)=>label==='Services'?<details className='pages-dropdown relative' key={label} onKeyDown={event=>{if(event.key==='Escape'){event.currentTarget.open=false;event.currentTarget.querySelector('summary').focus();}}}><summary className={isServicePage?'active':''}>Services <ChevronDown size={13}/></summary><div><a href='/#about'>About Us</a>{serviceLinks.map(([name, path]) => <a key={path} href={path} aria-current={currentPath === path ? 'page' : undefined}>{name}</a>)}</div></details>:<a key={href} href={href.startsWith("#")?"/"+href:href} onClick={()=>setMenu(false)} className={i===(isVisa||isHotels||isLogin||isCarRentals||currentService?-1:isContact?4:isHolidays?3:0)?'active':''}>{label}</a>)}</nav>
       <div className="header-actions"><span><Globe size={17}/> INR</span><button aria-label="Open trip planner" onClick={()=>plan()}><CircleUser size={19}/></button><a className="pill" href="/contact/"><MessageCircle size={17}/> Contact Us</a></div>
       <a href="/login/" aria-current={isLogin?'page':undefined} className="header-login"><LogIn size={16} aria-hidden="true"/> Login</a>

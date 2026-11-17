@@ -1,5 +1,5 @@
-import {useRef, useState} from 'react';
-import {ArrowLeft, CalendarDays, LayoutDashboard, LogIn, LogOut, Menu, ShieldCheck, Users, X} from 'lucide-react';
+import {useState} from 'react';
+import {ArrowLeft, CalendarDays, LayoutDashboard, LogIn, LogOut, ShieldCheck, Users, X} from 'lucide-react';
 import {destinationPhotos} from './destinationPhotos';
 import './login.css';
 
@@ -9,7 +9,6 @@ const demoSessionKey = 'kerala-hub-demo-admin';
 
 export default function Login({showDashboard = false, adminView = 'Dashboard'}){
   const [error, setError] = useState('');
-  const mobileMenu = useRef(null);
 
   function signIn(event){
     event.preventDefault();
@@ -45,10 +44,7 @@ export default function Login({showDashboard = false, adminView = 'Dashboard'}){
         </div>
     </>;
     return <main className="section grid w-full gap-5 px-4 sm:px-6 md:grid-cols-[15rem_minmax(0,1fr)] lg:px-8">
-      <button type="button" className="outline md:hidden" aria-haspopup="dialog" onClick={()=>mobileMenu.current.showModal()}>
-        <Menu size={18} aria-hidden="true"/> Admin menu
-      </button>
-      <dialog ref={mobileMenu} aria-labelledby="mobile-admin-title" className="fixed inset-y-0 left-0 m-0 h-dvh max-h-none w-72 max-w-[85vw] border-0 bg-white p-0 text-brand-dark backdrop:bg-black/50 md:hidden">
+      <dialog id="mobile-admin-menu" aria-labelledby="mobile-admin-title" className="fixed inset-y-0 left-0 m-0 h-dvh max-h-none w-72 max-w-[85vw] border-0 bg-white p-0 text-brand-dark backdrop:bg-black/50 md:hidden">
         <div className="flex min-h-full flex-col gap-4 p-4">
           <div className="flex items-center justify-between gap-2 border-b border-neutral-200 pb-3">
             <h2 id="mobile-admin-title" className="text-sm font-semibold">Kerala Hub Admin</h2>
