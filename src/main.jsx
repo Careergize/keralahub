@@ -1,4 +1,4 @@
-import {openWhatsAppEnquiry} from './whatsapp';
+import {openWhatsAppEnquiry, whatsappUrl} from './whatsapp';
 import Testimonials from './Testimonials';
 import React, {useEffect, useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
@@ -94,7 +94,7 @@ function App(){
   return <>
     <header id="home" className="site-header">
       <Brand/>
-      <nav className={menu?'nav open':'nav'} aria-label="Main navigation">{links.map(([label,href],i)=>label==='Pages'?<details className='pages-dropdown relative' key={label} onKeyDown={event=>{if(event.key==='Escape'){event.currentTarget.open=false;event.currentTarget.querySelector('summary').focus();}}}><summary className={isVisa||isHotels?'active':''}>Pages <ChevronDown size={13}/></summary><div><a href='/#about'>About Us</a><a href='/visa-category/' aria-current={isVisa?'page':undefined}>Visa</a><a href='/hotel/' aria-current={isHotels?'page':undefined}>Hotels</a></div></details>:<a key={href} href={href.startsWith("#")?"/"+href:href} onClick={()=>setMenu(false)} className={i===(isVisa||isHotels?-1:isContact?5:isHolidays?3:isCarRentals?4:0)?'active':''}>{label}{[1,2].includes(i)&&<ChevronDown size={13}/>}</a>)}</nav>
+      <nav className={menu?'nav open':'nav'} aria-label="Main navigation">{links.map(([label,href],i)=>label==='Pages'?<details className='pages-dropdown relative' key={label} onKeyDown={event=>{if(event.key==='Escape'){event.currentTarget.open=false;event.currentTarget.querySelector('summary').focus();}}}><summary className={isVisa||isHotels?'active':''}>Pages <ChevronDown size={13}/></summary><div><a href='/#about'>About Us</a><a href='/visa-category/' aria-current={isVisa?'page':undefined}>Visa</a><a href='/hotel/' aria-current={isHotels?'page':undefined}>Hotels</a></div></details>:<a key={href} href={href.startsWith("#")?"/"+href:href} onClick={()=>setMenu(false)} className={i===(isVisa||isHotels?-1:isContact?5:isHolidays?3:isCarRentals?4:0)?'active':''}>{label}</a>)}</nav>
       <div className="header-actions"><span><Globe size={17}/> INR</span><button aria-label="Open trip planner" onClick={()=>plan()}><CircleUser size={19}/></button><a className="pill" href="/contact/"><MessageCircle size={17}/> Contact Us</a></div>
       <button className="mobile-toggle" aria-label="Toggle navigation" aria-expanded={menu} onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button>
     </header>
@@ -183,6 +183,19 @@ function App(){
         <p className="copyright">© {new Date().getFullYear()} Kerala Hub Holidays. All rights reserved.</p>
       </div>
     </footer>
+    <a
+      className="fixed right-4 bottom-4 z-30 grid size-14 place-items-center rounded-full border-2 border-white bg-[#12753c] text-white shadow-lg hover:bg-[#0d5e30] sm:right-6 sm:bottom-6"
+      href={whatsappUrl('Hi Kerala Hub Holidays, I’d like to make a travel enquiry.')}
+      aria-label="Quick enquiry on WhatsApp"
+      title="Quick enquiry on WhatsApp"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <svg aria-hidden="true" viewBox="0 0 24 24" className="size-8" fill="currentColor">
+        <path d="M12 2a10 10 0 0 0-8.69 14.95L2 22l5.18-1.25A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.18-1.18l-.36-.22-2.65.64.67-2.56-.24-.38A8 8 0 1 1 12 20Z"/>
+        <path d="M9 7.5c-.24-.55-.49-.56-.72-.57h-.61c-.21 0-.55.08-.84.4-.29.31-1.1 1.07-1.1 2.62s1.13 3.04 1.29 3.25c.16.21 2.23 3.4 5.4 4.64 2.64 1.04 3.18.83 3.76.78.57-.05 1.85-.76 2.11-1.49.26-.73.26-1.36.18-1.49-.08-.13-.29-.21-.6-.37s-1.85-.91-2.14-1.02c-.29-.1-.5-.15-.71.16s-.81 1.02-.99 1.23c-.18.21-.37.24-.68.08-.32-.16-1.33-.49-2.53-1.56-.94-.84-1.57-1.87-1.75-2.19-.18-.31-.02-.48.14-.64.14-.14.31-.36.47-.55.16-.18.21-.31.31-.52.11-.21.06-.39-.02-.55-.08-.16-.69-1.7-.97-2.21Z" transform="translate(1.2 1.2) scale(.9)"/>
+      </svg>
+    </a>
 
     {dialog&&<Dialog onClose={()=>setDialog(null)} title={dialog.kind==='plan'?'Plan Your Kerala Holiday':dialog.kind==='tour'?dialog.tour.title:'Travel gallery'}>
       {dialog.kind==='image'&&<img className="w-full rounded-xl" src={asset('gallery-img-'+dialog.image+'.webp')} alt={'Travel gallery image '+dialog.image}/>}
