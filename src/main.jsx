@@ -50,7 +50,7 @@ if (isHolidays) document.title = 'Vacation Packages | Kerala Hub Holidays';
 
 const places = Object.values(regions).flat();
 const photos = [4,2,5,1,6,9,7,8].map((n) => asset('package-details-gallery-img'+n+(n >= 6 ? '-1024x643' : '')+'.webp'));
-const links = [['Home','#home'],['Destination','#destinations'],['Pages','#about'],['Holidays','/holidays/'],['Car Rentals','/transport/'],['Contact','/contact/']];
+const links = [['Home','#home'],['Destination','#destinations'],['Services','#about'],['Holidays','/holidays/'],['Contact','/contact/']];
 
 function Brand(){
   return <a href="/#home" className="brand"><img src="/kerala-hub-holidays-logo.jpg" width="1080" height="1350" alt="Kerala Hub Holidays"/></a>;
@@ -165,7 +165,7 @@ function App(){
   return <>
     <header id="home" className="site-header">
       <Brand/>
-      <nav className={menu?'nav open':'nav'} aria-label="Main navigation">{links.map(([label,href],i)=>label==='Pages'?<details className='pages-dropdown relative' key={label} onKeyDown={event=>{if(event.key==='Escape'){event.currentTarget.open=false;event.currentTarget.querySelector('summary').focus();}}}><summary className={isServicePage?'active':''}>Pages <ChevronDown size={13}/></summary><div><a href='/#about'>About Us</a>{serviceLinks.map(([name, path]) => <a key={path} href={path} aria-current={currentPath === path ? 'page' : undefined}>{name}</a>)}</div></details>:<a key={href} href={href.startsWith("#")?"/"+href:href} onClick={()=>setMenu(false)} className={i===(isVisa||isHotels||isLogin||currentService?-1:isContact?5:isHolidays?3:isCarRentals?4:0)?'active':''}>{label}</a>)}</nav>
+      <nav className={menu?'nav open':'nav'} aria-label="Main navigation">{links.map(([label,href],i)=>label==='Services'?<details className='pages-dropdown relative' key={label} onKeyDown={event=>{if(event.key==='Escape'){event.currentTarget.open=false;event.currentTarget.querySelector('summary').focus();}}}><summary className={isServicePage?'active':''}>Services <ChevronDown size={13}/></summary><div><a href='/#about'>About Us</a>{serviceLinks.map(([name, path]) => <a key={path} href={path} aria-current={currentPath === path ? 'page' : undefined}>{name}</a>)}</div></details>:<a key={href} href={href.startsWith("#")?"/"+href:href} onClick={()=>setMenu(false)} className={i===(isVisa||isHotels||isLogin||isCarRentals||currentService?-1:isContact?4:isHolidays?3:0)?'active':''}>{label}</a>)}</nav>
       <div className="header-actions"><span><Globe size={17}/> INR</span><button aria-label="Open trip planner" onClick={()=>plan()}><CircleUser size={19}/></button><a className="pill" href="/contact/"><MessageCircle size={17}/> Contact Us</a></div>
       <a href="/login/" aria-current={isLogin?'page':undefined} className="header-login"><LogIn size={16} aria-hidden="true"/> Login</a>
       <button className="mobile-toggle" aria-label="Toggle navigation" aria-expanded={menu} onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button>
