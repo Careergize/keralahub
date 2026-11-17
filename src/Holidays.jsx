@@ -51,7 +51,7 @@ export default function Holidays({renderTour}){
       <div className="wrap holiday-section">
         <h2>Discounts &amp; Offers</h2>
         <p>Explore featured holidays and ask about offers for your travel dates.</p>
-        <div className="holiday-offer-grid">{themes.map(([title,description,type,place])=><article key={type} style={{backgroundImage:'linear-gradient(90deg,#081826e8,#08182620),url('+destinationPhotos[place].src+')'}}>
+        <div className="holiday-offer-grid">{themes.map(([title,description,type,place])=><article key={type} style={{backgroundImage:'linear-gradient(90deg,#22371ce8,#22371c20),url('+destinationPhotos[place].src+')'}}>
           <h3>{title}</h3><p>{description}</p><button className="holiday-button" onClick={()=>choose(type)}>Explore Packages <ArrowRight size={16}/></button>
         </article>)}</div>
       </div>

@@ -62,7 +62,7 @@ export default function CarRentals(){
     <section className="mx-[1.2%] grid min-h-[594px] content-center gap-6 rounded-2xl bg-slate-700 bg-cover bg-center px-4 py-12 text-center text-white" style={{backgroundImage:'linear-gradient(#0005,#0006),url('+banner+')'}}>
       <h1 className="text-4xl font-semibold md:text-[60px]">Transport</h1>
       <form ref={form} onSubmit={search} className="mx-auto grid w-full max-w-[1320px] items-end gap-4 rounded-2xl bg-white px-5 py-7 md:px-9 md:pb-10 text-left text-neutral-900 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1.2fr_1fr_auto]">
-        <div className="col-span-full flex w-fit rounded-full bg-blue-50 text-sm font-medium text-brand">
+        <div className="col-span-full flex w-fit rounded-full bg-brand-tint text-sm font-medium text-brand">
           <button type="button" aria-pressed={service==='rent'} className={service==='rent'?'pill py-1.5':'px-3 py-1.5'} onClick={()=>setService('rent')}>For Rent</button>
           <button type="button" aria-pressed={service==='ticket'} className={service==='ticket'?'pill py-1.5':'px-3 py-1.5'} onClick={()=>setService('ticket')}>For Ticket</button>
         </div>

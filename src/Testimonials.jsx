@@ -15,7 +15,7 @@ export default function Testimonials() {
   }
 
   return (
-    <section id="testimonials" className="section bg-white text-brochure-plum" aria-labelledby="testimonials-heading">
+    <section id="testimonials" className="section bg-white text-brand-dark" aria-labelledby="testimonials-heading">
       <div className="wrap">
         <div className="mb-14 flex flex-wrap items-end justify-between gap-5 md:mb-20">
           <div>
@@ -23,8 +23,8 @@ export default function Testimonials() {
             <p className="mt-3 text-neutral-600">Sample testimonials with stock photos</p>
           </div>
           <div className="flex gap-4">
-            <button type="button" aria-label="Previous testimonial" onClick={() => move(-1)} className="grid size-11 place-items-center rounded-full border border-brochure-plum hover:bg-brochure-lavender"><ChevronLeft size={20}/></button>
-            <button type="button" aria-label="Next testimonial" onClick={() => move(1)} className="grid size-11 place-items-center rounded-full border border-brochure-plum hover:bg-brochure-lavender"><ChevronRight size={20}/></button>
+            <button type="button" aria-label="Previous testimonial" onClick={() => move(-1)} className="grid size-11 place-items-center rounded-full border border-brand-dark hover:bg-brand-paper"><ChevronLeft size={20}/></button>
+            <button type="button" aria-label="Next testimonial" onClick={() => move(1)} className="grid size-11 place-items-center rounded-full border border-brand-dark hover:bg-brand-paper"><ChevronRight size={20}/></button>
           </div>
         </div>
 
@@ -34,14 +34,14 @@ export default function Testimonials() {
             const visibility = ['flex', 'hidden md:flex', 'hidden lg:flex'][offset];
             return (
               <article key={trip} className={visibility + ' relative flex-col rounded-xl border border-neutral-200 bg-white px-6 pt-16 pb-7 text-neutral-900'}>
-                <img src={import.meta.env.BASE_URL + 'testimonials/' + portrait + '.jpg'} alt="" width="72" height="72" loading="lazy" className="absolute -top-7 left-1/2 size-18 -translate-x-1/2 rounded-full border-4 border-white bg-brochure-lavender object-cover"/>
+                <img src={import.meta.env.BASE_URL + 'testimonials/' + portrait + '.jpg'} alt="" width="72" height="72" loading="lazy" className="absolute -top-7 left-1/2 size-18 -translate-x-1/2 rounded-full border-4 border-white bg-brand-paper object-cover"/>
                 <blockquote className="relative flex-1 pt-7 text-center leading-7 text-neutral-700">
                   <Quote aria-hidden="true" className="absolute -top-5 left-0 text-neutral-200" size={32}/>
                   <p>{quote}</p>
                 </blockquote>
                 <div className="mt-7 flex flex-wrap items-center justify-between gap-3">
                   <h3 className="font-semibold">{trip}</h3>
-                  <span role="img" aria-label="Sample rating: 5 out of 5 stars" className="flex gap-1 text-[#b84736]">
+                  <span role="img" aria-label="Sample rating: 5 out of 5 stars" className="flex gap-1 text-brand-gold-deep">
                     {[0, 1, 2, 3, 4].map(star => <Star key={star} aria-hidden="true" size={16} fill="currentColor"/>)}
                   </span>
                 </div>

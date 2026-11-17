@@ -31,7 +31,7 @@ const photos = [4,2,5,1,6,9,7,8].map((n) => asset('package-details-gallery-img'+
 const links = [['Home','#home'],['Destination','#destinations'],['Pages','#about'],['Holidays','/holidays/'],['Car Rentals','/transport/'],['Contact','/contact/']];
 
 function Brand(){
-  return <a href="/#home" className="brand"><img src="/kerala-hub-logo.png" width="346" height="105" alt="Kerala Hub Holidays"/></a>;
+  return <a href="/#home" className="brand"><img src="/kerala-hub-holidays-logo.jpg" width="1080" height="1350" alt="Kerala Hub Holidays"/></a>;
 }
 
 function TourCard({tour, onOpen}){
@@ -136,7 +136,7 @@ function App(){
 
       <section className="wrap section grid items-center gap-10 lg:grid-cols-2" aria-labelledby="explore-heading">
         <div>
-          <p className="mb-4 inline-flex rounded-full bg-[#e8f3ff] px-4 py-2 text-sm font-semibold text-brand">Best Travel Agency in Kerala</p>
+          <p className="mb-4 inline-flex rounded-full bg-brand-tint px-4 py-2 text-sm font-semibold text-brand">Best Travel Agency in Kerala</p>
           <h2 id="explore-heading">Explore the World With Confidence.</h2>
           <p className="mt-5 leading-7 text-neutral-600">Discover Kerala’s backwaters, tea gardens and historic towns, or plan a holiday abroad. Kerala Hub Holidays helps you find destinations and experiences that suit the way you like to travel.</p>
           <p className="mt-4 leading-7 text-neutral-600">Tell us your dates, interests and who’s coming along. We’ll help shape an itinerary around the places and experiences you want to make time for.</p>

@@ -2,10 +2,10 @@ import React from 'react';
 import {BadgeDollarSign, Headset, Map, ShieldCheck} from 'lucide-react';
 
 const benefits = [
-  {icon:BadgeDollarSign, color:'bg-[#e6f5a9]', title:'Best Price Guarantee Ever.', description:<>Travel confidently knowing you are getting the best value. We guarantee competitive prices with <strong>no hidden costs.</strong></>},
+  {icon:BadgeDollarSign, color:'bg-brand-gold-soft', title:'Best Price Guarantee Ever.', description:<>Travel confidently knowing you are getting the best value. We guarantee competitive prices with <strong>no hidden costs.</strong></>},
   {icon:ShieldCheck, color:'bg-[#f0f0f0]', title:'Safe, Secure & Hassle-Free Booking.', description:<>Plan and confirm your trip quickly with our safe, simple, and fully <strong>secure booking system.</strong></>},
-  {icon:Map, color:'bg-[#bdebce]', title:'Flexible & Custom Travel Packages.', description:<>Plan your trip your way with a <strong>custom package</strong> tailored to your interests.</>},
-  {icon:Headset, color:'bg-[#e2e2ff]', title:'Our Support Is Always With You 24/7.', description:<>Travel with peace of mind knowing our expert team is always ready to <strong>support you anytime, anywhere.</strong></>},
+  {icon:Map, color:'bg-brand-mist', title:'Flexible & Custom Travel Packages.', description:<>Plan your trip your way with a <strong>custom package</strong> tailored to your interests.</>},
+  {icon:Headset, color:'bg-brand-tint', title:'Our Support Is Always With You 24/7.', description:<>Travel with peace of mind knowing our expert team is always ready to <strong>support you anytime, anywhere.</strong></>},
 ];
 
 export default function TravelBenefits(){

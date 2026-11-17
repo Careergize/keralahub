@@ -2,16 +2,20 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-brochure-plum: #372b41;
-  --color-brochure-lavender: #f4eef7;
-  --color-brochure-gold: #f6d761;
-  --color-brand: #0668e8;
+  --color-brand-dark: #304c27;
+  --color-brand-paper: #f8f9f3;
+  --color-brand-gold: #ffe35f;
+  --color-brand: #487636;
+  --color-brand-tint: #edf4e8;
+  --color-brand-mist: #dcebd4;
+  --color-brand-gold-soft: #fff4bc;
+  --color-brand-gold-deep: #876400;
   --font-sans: 'Poppins', 'DM Sans', sans-serif;
 }
 
 @layer base {
   html {scroll-behavior:smooth;scroll-padding-top:90px}
-  body {@apply bg-brochure-lavender font-sans text-neutral-900;}
+  body {@apply bg-brand-paper font-sans text-neutral-900;}
   button, select {@apply cursor-pointer;}
   h2 {@apply text-3xl font-semibold tracking-tight md:text-[42px] md:leading-tight;}
   h3 {@apply text-lg font-semibold;}
@@ -20,24 +24,26 @@
 @layer components {
   .wrap {@apply mx-auto w-[88%] max-w-[1320px];}
   .section {@apply py-14 md:py-20;}
-  .pill {@apply inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 font-medium text-white transition hover:bg-blue-800;}
+  .pill {@apply inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 font-medium text-white transition hover:bg-brand-dark;}
   .outline {@apply inline-flex w-fit items-center gap-2 rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium hover:border-brand hover:text-brand;}
   .promo {@apply flex min-h-10 flex-wrap items-center justify-center gap-x-1 bg-brand px-3 py-2 text-center text-sm text-white;}
   .promo a {@apply ml-3 font-semibold;}
-  .site-header {@apply sticky top-0 z-20 flex min-h-[69px] items-center justify-between gap-4 bg-brochure-plum px-[1.75%] text-white shadow-sm;}
+  .site-header {@apply sticky top-0 z-20 flex min-h-[69px] items-center justify-between gap-4 bg-brand px-[1.75%] text-white shadow-sm;}
   .brand {@apply inline-flex shrink-0 overflow-hidden rounded-md;}
-  .brand img {@apply h-auto w-[150px] sm:w-[165px];}
+  .brand img {@apply aspect-[3.2] w-[150px] scale-[1.16] object-cover sm:w-[165px];}
   footer .brand img {@apply w-[200px];}
-  .planner {@apply hidden shrink-0 items-center gap-1.5 rounded-full border border-blue-100 px-3 py-1 text-sm text-slate-700 sm:inline-flex;}
-  .planner svg {@apply text-brand;}
+  .planner {@apply hidden shrink-0 items-center gap-1.5 rounded-full border border-white/40 px-3 py-1 text-sm text-white sm:inline-flex;}
+  .planner svg {@apply text-brand-gold;}
   .nav {@apply hidden items-center gap-7 lg:flex;}
   .nav a {@apply flex items-center gap-0.5 text-[15px] font-medium hover:text-brand;}
   .nav .active {@apply text-brand;}
   .header-actions {@apply ml-auto hidden shrink-0 items-center gap-5 text-sm lg:ml-0 lg:flex;}
+  .site-header .pill {@apply bg-brand-gold text-brand-dark hover:bg-brand-gold-soft;}
+  .site-header :focus-visible,footer :focus-visible,.hero :focus-visible {@apply outline-brand-gold;}
   .header-actions span {@apply flex items-center gap-2;}
   .mobile-toggle {@apply ml-auto rounded-lg p-2 lg:hidden;}
-  .nav.open {@apply absolute inset-x-0 top-full flex flex-col items-start gap-5 border-t border-white/20 bg-brochure-plum p-6 shadow-lg lg:static lg:flex-row lg:items-center lg:gap-7 lg:border-0 lg:p-0 lg:shadow-none;}
-  .hero {@apply relative isolate min-h-[580px] overflow-hidden bg-[#062b3b] text-center text-white md:min-h-[660px];}
+  .nav.open {@apply absolute inset-x-0 top-full flex flex-col items-start gap-5 border-t border-white/20 bg-brand p-6 shadow-lg lg:static lg:flex-row lg:items-center lg:gap-7 lg:border-0 lg:p-0 lg:shadow-none;}
+  .hero {@apply relative isolate min-h-[580px] overflow-hidden bg-brand-dark text-center text-white md:min-h-[660px];}
   .hero video {@apply absolute inset-0 -z-20 h-full w-full object-cover;}
   .hero::after {@apply absolute inset-0 -z-10 bg-black/30 content-[''];}
   .hero-content {@apply mx-auto max-w-[1180px] px-5 pt-[100px] md:pt-[118px];}
@@ -46,8 +52,8 @@
   .hero-copy {@apply mx-auto mt-6 max-w-[890px] text-base font-medium md:text-lg;}
   .hero-button {@apply mt-10 inline-flex items-center gap-2 rounded-full border border-white/10 bg-neutral-800/70 px-8 py-[18px] font-semibold backdrop-blur hover:bg-brand;}
   .search-wrap {@apply relative z-10 -mt-[140px];}
-  .search-box {@apply rounded-2xl bg-white p-5 shadow-[0_8px_36px_#12295217] md:p-[30px];}
-  .tab {@apply inline-flex items-center gap-1.5 rounded-full bg-[#e8f3ff] px-4 py-2.5 text-sm font-semibold text-brand hover:bg-blue-100;}
+  .search-box {@apply rounded-2xl bg-white p-5 shadow-[0_8px_36px_#304c2717] md:p-[30px];}
+  .tab {@apply inline-flex items-center gap-1.5 rounded-full bg-brand-tint px-4 py-2.5 text-sm font-semibold text-brand hover:bg-brand-mist;}
   .tab.active {@apply bg-brand text-white;}
   .finder {@apply my-5 grid items-stretch gap-3 lg:grid-cols-[repeat(3,minmax(0,1fr))_auto];}
   .finder label {@apply flex min-w-0 items-center gap-3 rounded-xl border border-neutral-200 bg-neutral-50 px-3 pt-2 text-sm font-medium text-neutral-700 focus-within:border-brand;}
@@ -58,8 +64,8 @@
   .search-note {@apply text-sm text-neutral-500;}
   .search-note button {@apply font-semibold text-brand underline;}
   .visa-panel {@apply my-5 flex flex-wrap items-center gap-4 rounded-lg border border-neutral-200 p-4;}
-  .about {@apply bg-brochure-plum text-center text-white;}
-  .about .intro {@apply text-brochure-lavender;}
+  .about {@apply bg-brand-dark text-center text-white;}
+  .about .intro {@apply text-brand-paper;}
   .avatars {@apply mb-5 flex justify-center -space-x-2;}
   .avatars img {@apply size-12 rounded-full border-2 border-white object-cover;}
   .intro {@apply mx-auto mt-4 mb-9 max-w-[700px] text-neutral-600;}
@@ -79,18 +85,18 @@
   .next {@apply right-3;}
   .dots {@apply absolute right-0 bottom-3 left-0 flex justify-center gap-1.5;}
   .dots button {@apply size-2 rounded-full bg-white/70;}
-  .dots .selected {@apply bg-brand;}
+  .dots .selected {@apply bg-brand-gold;}
   .meta {@apply mb-3 flex justify-between gap-3 text-sm text-neutral-600;}
   .meta span {@apply inline-flex items-center gap-1;}
   .tour-title {@apply mb-2 text-left text-lg font-semibold hover:text-brand;}
   .tour-bottom {@apply mt-5 flex flex-wrap items-center justify-between gap-2 border-t border-neutral-200 pt-4 text-sm;}
-  .destinations {@apply bg-[#bdebce] bg-cover bg-center;}
+  .destinations {@apply bg-brand-mist bg-cover bg-center;}
   .destination-grid {@apply flex flex-wrap justify-center gap-5;}
   .destination {@apply relative w-full max-w-[365px] overflow-hidden rounded-2xl text-left text-white;}
   .destination img {@apply aspect-[4/5] w-full object-cover transition duration-300 hover:scale-105;}
   .destination span {@apply pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-black/85 to-transparent p-5 pt-12 text-xl font-semibold;}
   .customize {@apply grid gap-6 md:grid-cols-[1.5fr_1fr];}
-  .customize > div,.customize aside {@apply rounded-2xl bg-[#eaf4ff] p-7 md:p-10;}
+  .customize > div,.customize aside {@apply rounded-2xl bg-brand-tint p-7 md:p-10;}
   .customize aside {@apply flex flex-col items-start justify-center gap-4 bg-[#f0f0f0] bg-cover bg-center;}
   .customize aside svg {@apply text-brand;}
   .steps {@apply mb-6 list-decimal space-y-2 pl-5;}
@@ -98,7 +104,7 @@
   .gallery {@apply grid grid-cols-2 sm:grid-cols-5;}
   .gallery img {@apply aspect-[4/3] w-full object-cover;}
   .gallery button:last-child {@apply hidden sm:block;}
-  footer {@apply bg-brochure-plum py-12 text-white;}
+  footer {@apply bg-brand py-12 text-white;}
   .newsletter {@apply grid items-center gap-6 border-b border-white/20 pb-9 lg:grid-cols-2;}
   .newsletter h2 {@apply mb-2 text-2xl md:text-3xl;}
   .newsletter form {@apply flex flex-wrap gap-2;}
@@ -106,8 +112,8 @@
   .newsletter form p {@apply w-full text-sm;}
   .footer-links {@apply grid gap-8 py-10 sm:grid-cols-3;}
   .footer-links h3 {@apply mb-3;}
-  .footer-links :is(a,button):not(.brand) {@apply mb-2 block text-sm text-white/75 hover:text-white;}
-  .copyright {@apply border-t border-white/20 pt-5 text-sm text-white/75;}
+  .footer-links :is(a,button):not(.brand) {@apply mb-2 block text-sm text-white hover:underline;}
+  .copyright {@apply border-t border-white/20 pt-5 text-sm text-white;}
   dialog {@apply m-auto max-h-[90vh] w-[min(92%,570px)] overflow-auto rounded-2xl bg-white text-neutral-900 shadow-2xl;}
   dialog::backdrop {@apply bg-black/55;}
   .dialog-content {@apply p-6 md:p-8;}
@@ -116,7 +122,7 @@
   .plan-form {@apply grid gap-4;}
   .plan-form label {@apply grid gap-1 text-sm font-medium;}
   .plan-form :is(select,input,textarea) {@apply w-full rounded-lg border border-neutral-300 p-3;}
-  .summary {@apply rounded-lg bg-blue-50 p-4;}
+  .summary {@apply rounded-lg bg-brand-tint p-4;}
 }
 .destinations {background-image:url('https://atlastrip-wp.egenstheme.com/travel-agency/wp-content/uploads/sites/2/2026/08/destination-section-bg.png')}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
@@ -124,20 +130,20 @@
   .pages-dropdown summary {@apply flex cursor-pointer list-none items-center text-[15px] font-medium hover:text-brand;}
   .pages-dropdown summary::-webkit-details-marker {display:none;}
   .pages-dropdown > div {@apply mt-2 min-w-40 rounded-xl border border-neutral-200 bg-white p-2 shadow-lg lg:absolute lg:left-0 lg:top-full;}
-  .pages-dropdown a {@apply rounded-lg px-3 py-2 hover:bg-blue-50;}
+  .pages-dropdown a {@apply rounded-lg px-3 py-2 hover:bg-brand-tint;}
 }
 
 @layer components {
   .site-header .nav > a:hover,
   .site-header .nav .active,
   .site-header .pages-dropdown summary:hover {
-    @apply text-brochure-gold;
+    @apply text-brand-gold-soft;
   }
   .site-header .pages-dropdown > div {
-    @apply border-white/20 bg-brochure-plum;
+    @apply border-white/20 bg-brand;
   }
   .site-header .pages-dropdown a:hover {
-    @apply bg-white/10 text-brochure-gold;
+    @apply bg-brand-dark text-brand-gold-soft;
   }
 }
 @keyframes travel-reveal {
@@ -160,7 +166,7 @@
 @media (prefers-reduced-motion: no-preference) and (hover:hover) {
   :is(.tour,.journal):hover {
     transform:translateY(-4px);
-    box-shadow:0 12px 25px #372b411a;
+    box-shadow:0 12px 25px #304c271a;
   }
   :is(.pill,.outline,.holiday-button,.tab):hover {transform:translateY(-2px)}
 }
