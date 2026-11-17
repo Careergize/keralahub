@@ -34,6 +34,55 @@ function Brand(){
   return <a href="/#home" className="brand"><img src="/kerala-hub-holidays-logo.jpg" width="1080" height="1350" alt="Kerala Hub Holidays"/></a>;
 }
 
+const welcomeKey = 'explore-kerala-welcome';
+const welcomeArtwork = import.meta.env.BASE_URL + 'explore-kerala.png';
+
+function WelcomePopup(){
+  const popup = useRef(null);
+  const [showWelcome, setShowWelcome] = useState(() => {
+    try {
+      return !sessionStorage.getItem(welcomeKey);
+    } catch {
+      return true;
+    }
+  });
+
+  function openWelcome(){
+    if (!popup.current || popup.current.open) return;
+    popup.current.showModal();
+    try {
+      sessionStorage.setItem(welcomeKey, 'seen');
+    } catch {
+      // The popup can still be dismissed when storage is unavailable.
+    }
+  }
+
+  if (!showWelcome) return null;
+
+  return <dialog
+    ref={popup}
+    className="welcome-popup"
+    aria-label="Explore Kerala with Kerala Hub Holidays"
+    onClose={() => setShowWelcome(false)}
+    onClick={event => { if (event.target === event.currentTarget) event.currentTarget.close(); }}
+  >
+    <div className="relative">
+      <button type="button" autoFocus aria-label="Close welcome popup" className="welcome-close" onClick={() => popup.current.close()}>
+        <X size={21}/>
+      </button>
+      <div className="relative aspect-[1086/1105] overflow-hidden bg-[#0066b8]">
+        <img className="absolute inset-x-0 top-0 h-auto w-full" src={welcomeArtwork} alt="Explore Kerala with Kerala Hub Holidays" width="1086" height="1448" onLoad={openWelcome}/>
+      </div>
+      <div className="flex justify-center bg-brand-dark px-4 py-3">
+        <a href="/contact/" className="welcome-contact">Contact Us <ArrowRight size={17}/></a>
+      </div>
+      <div className="relative aspect-[1086/148] overflow-hidden">
+        <img className="absolute inset-x-0 bottom-0 h-auto w-full" src={welcomeArtwork} width="1086" height="1448" alt="Kerala tour packages, customized tours, hotel bookings, and flight and travel services"/>
+      </div>
+    </div>
+  </dialog>;
+}
+
 function TourCard({tour, onOpen}){
   const [photo,setPhoto] = useState(0);
   const [saved,setSaved] = useState(false);
@@ -183,6 +232,7 @@ function App(){
         <p className="copyright">© {new Date().getFullYear()} Kerala Hub Holidays. All rights reserved.</p>
       </div>
     </footer>
+    {!isContact && <WelcomePopup/>}
     <a
       className="fixed right-4 bottom-4 z-30 grid size-14 place-items-center rounded-full border-2 border-white bg-[#12753c] text-white shadow-lg hover:bg-[#0d5e30] sm:right-6 sm:bottom-6"
       href={whatsappUrl('Hi Kerala Hub Holidays, I’d like to make a travel enquiry.')}

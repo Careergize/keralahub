@@ -116,6 +116,9 @@
   .copyright {@apply border-t border-white/20 pt-5 text-sm text-white;}
   dialog {@apply m-auto max-h-[90vh] w-[min(92%,570px)] overflow-auto rounded-2xl bg-white text-neutral-900 shadow-2xl;}
   dialog::backdrop {@apply bg-black/55;}
+  .welcome-popup {@apply w-[min(92vw,64dvh,500px)] max-h-[94dvh] bg-brand-dark shadow-2xl;}
+  .welcome-close {@apply absolute top-2 right-2 z-10 grid size-11 place-items-center rounded-full bg-black/75 text-white hover:bg-black focus-visible:outline-white;}
+  .welcome-contact {@apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-brand-gold px-6 font-semibold text-brand-dark hover:bg-brand-gold-soft focus-visible:outline-white;}
   .dialog-content {@apply p-6 md:p-8;}
   .dialog-content .section-head {@apply flex-nowrap;}
   .dialog-content h2 {@apply text-2xl;}
