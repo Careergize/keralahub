@@ -2,10 +2,11 @@ import {openWhatsAppEnquiry, whatsappUrl} from './whatsapp';
 import Testimonials from './Testimonials';
 import React, {useEffect, useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {ArrowRight, Binoculars, CalendarDays, ChevronDown, ChevronLeft, ChevronRight, CircleUser, Compass, Globe, Heart, MapPin, Menu, MessageCircle, Search, X} from 'lucide-react';
+import {ArrowRight, Binoculars, CalendarDays, ChevronDown, ChevronLeft, ChevronRight, CircleUser, Compass, Globe, Heart, LogIn, MapPin, Menu, MessageCircle, Search, X} from 'lucide-react';
 import {asset, experiences, regions, tours} from './data';
 import './style.css';
 import Contact from './Contact';
+import Login from './Login';
 import Holidays from './Holidays';
 import Visa from './Visa';
 import Hotels from './Hotels';
@@ -15,6 +16,7 @@ import TopDestinations from './TopDestinations';
 import TravelBenefits from './TravelBenefits';
 import {destinationPhotos} from './destinationPhotos';
 
+const isLogin = ['/login','/login/'].includes(window.location.pathname);
 const isContact = ['/contact','/contact/'].includes(window.location.pathname);
 const isHolidays = ['/holidays','/holidays/'].includes(window.location.pathname);
 const isVisa = ['/visa-category','/visa-category/'].includes(window.location.pathname);
@@ -23,6 +25,7 @@ const isCarRentals = ['/transport','/transport/'].includes(window.location.pathn
 if (isCarRentals) document.title = 'Car Rentals | Kerala Hub Holidays';
 if (isHotels) document.title = 'Hotels | Kerala Hub Holidays';
 if (isVisa) document.title = 'Visa Processing | Kerala Hub Holidays';
+if (isLogin) document.title = 'Sign In | Kerala Hub Holidays';
 if (isContact) document.title = 'Contact Us | Kerala Hub Holidays';
 if (isHolidays) document.title = 'Vacation Packages | Kerala Hub Holidays';
 
@@ -143,12 +146,13 @@ function App(){
   return <>
     <header id="home" className="site-header">
       <Brand/>
-      <nav className={menu?'nav open':'nav'} aria-label="Main navigation">{links.map(([label,href],i)=>label==='Pages'?<details className='pages-dropdown relative' key={label} onKeyDown={event=>{if(event.key==='Escape'){event.currentTarget.open=false;event.currentTarget.querySelector('summary').focus();}}}><summary className={isVisa||isHotels?'active':''}>Pages <ChevronDown size={13}/></summary><div><a href='/#about'>About Us</a><a href='/visa-category/' aria-current={isVisa?'page':undefined}>Visa</a><a href='/hotel/' aria-current={isHotels?'page':undefined}>Hotels</a></div></details>:<a key={href} href={href.startsWith("#")?"/"+href:href} onClick={()=>setMenu(false)} className={i===(isVisa||isHotels?-1:isContact?5:isHolidays?3:isCarRentals?4:0)?'active':''}>{label}</a>)}</nav>
+      <nav className={menu?'nav open':'nav'} aria-label="Main navigation">{links.map(([label,href],i)=>label==='Pages'?<details className='pages-dropdown relative' key={label} onKeyDown={event=>{if(event.key==='Escape'){event.currentTarget.open=false;event.currentTarget.querySelector('summary').focus();}}}><summary className={isVisa||isHotels?'active':''}>Pages <ChevronDown size={13}/></summary><div><a href='/#about'>About Us</a><a href='/visa-category/' aria-current={isVisa?'page':undefined}>Visa</a><a href='/hotel/' aria-current={isHotels?'page':undefined}>Hotels</a></div></details>:<a key={href} href={href.startsWith("#")?"/"+href:href} onClick={()=>setMenu(false)} className={i===(isVisa||isHotels||isLogin?-1:isContact?5:isHolidays?3:isCarRentals?4:0)?'active':''}>{label}</a>)}</nav>
       <div className="header-actions"><span><Globe size={17}/> INR</span><button aria-label="Open trip planner" onClick={()=>plan()}><CircleUser size={19}/></button><a className="pill" href="/contact/"><MessageCircle size={17}/> Contact Us</a></div>
+      <a href="/login/" aria-current={isLogin?'page':undefined} className="header-login"><LogIn size={16} aria-hidden="true"/> Login</a>
       <button className="mobile-toggle" aria-label="Toggle navigation" aria-expanded={menu} onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button>
     </header>
 
-    {isCarRentals?<CarRentals/>:isHotels?<Hotels/>:isVisa?<Visa/>:isContact?<Contact/>:isHolidays?<Holidays renderTour={tour=><TourCard key={tour.title} tour={tour} onOpen={tour=>setDialog({kind:'tour',tour})}/>}/>:<main>
+    {isLogin?<Login/>:isCarRentals?<CarRentals/>:isHotels?<Hotels/>:isVisa?<Visa/>:isContact?<Contact/>:isHolidays?<Holidays renderTour={tour=><TourCard key={tour.title} tour={tour} onOpen={tour=>setDialog({kind:'tour',tour})}/>}/>:<main>
       <section className="hero">
         <video src={asset('travel-agency-banner-video.mp4')} autoPlay muted loop playsInline aria-hidden="true"/>
         <div className="hero-content">
@@ -232,7 +236,7 @@ function App(){
         <p className="copyright">© {new Date().getFullYear()} Kerala Hub Holidays. All rights reserved.</p>
       </div>
     </footer>
-    {!isContact && <WelcomePopup/>}
+    {!isContact && !isLogin && <WelcomePopup/>}
     <a
       className="fixed right-4 bottom-4 z-30 grid size-14 place-items-center rounded-full border-2 border-white bg-[#12753c] text-white shadow-lg hover:bg-[#0d5e30] sm:right-6 sm:bottom-6"
       href={whatsappUrl('Hi Kerala Hub Holidays, I’d like to make a travel enquiry.')}

@@ -1,0 +1,13 @@
+@reference './style.css';
+
+.login-card {@apply mx-auto grid max-w-4xl overflow-hidden rounded-3xl border border-brand-mist bg-white shadow-sm md:grid-cols-2;}
+.login-photo {@apply relative hidden overflow-hidden bg-brand-dark md:block;}
+.login-photo img {@apply absolute inset-0 h-full w-full object-cover;}
+.login-photo figcaption {@apply absolute inset-x-0 bottom-0 bg-black/75 px-4 py-3 text-xs text-white;}
+.login-photo a {@apply underline;}
+.login-photo a:focus-visible {@apply outline-white;}
+.login-content {@apply min-w-0 p-6 sm:p-10;}
+.login-fields {@apply my-6 grid gap-4;}
+.login-fields label {@apply grid gap-1.5 text-sm font-medium text-brand-dark;}
+.login-fields input {@apply min-h-11 rounded-lg border border-brand-mist bg-brand-paper px-3;}
+.login-fields button {@apply cursor-not-allowed bg-brand-mist text-brand-dark hover:bg-brand-mist;}

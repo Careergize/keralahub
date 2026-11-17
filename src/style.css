@@ -41,7 +41,9 @@
   .site-header .pill {@apply bg-brand-gold text-brand-dark hover:bg-brand-gold-soft;}
   .site-header :focus-visible,footer :focus-visible,.hero :focus-visible {@apply outline-brand-gold;}
   .header-actions span {@apply flex items-center gap-2;}
-  .mobile-toggle {@apply ml-auto rounded-lg p-2 lg:hidden;}
+  .header-login {@apply ml-auto inline-flex shrink-0 items-center gap-1.5 text-sm font-medium hover:text-brand-gold lg:ml-0;}
+  .header-login[aria-current='page'] {@apply text-brand-gold;}
+  .mobile-toggle {@apply rounded-lg p-2 lg:hidden;}
   .nav.open {@apply absolute inset-x-0 top-full flex flex-col items-start gap-5 border-t border-white/20 bg-brand p-6 shadow-lg lg:static lg:flex-row lg:items-center lg:gap-7 lg:border-0 lg:p-0 lg:shadow-none;}
   .hero {@apply relative isolate min-h-[580px] overflow-hidden bg-brand-dark text-center text-white md:min-h-[660px];}
   .hero video {@apply absolute inset-0 -z-20 h-full w-full object-cover;}
