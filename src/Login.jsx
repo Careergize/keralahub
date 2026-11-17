@@ -1,5 +1,5 @@
-import {useState} from 'react';
-import {ArrowLeft, CalendarDays, LayoutDashboard, LogIn, LogOut, ShieldCheck, Users} from 'lucide-react';
+import {useRef, useState} from 'react';
+import {ArrowLeft, CalendarDays, LayoutDashboard, LogIn, LogOut, Menu, ShieldCheck, Users, X} from 'lucide-react';
 import {destinationPhotos} from './destinationPhotos';
 import './login.css';
 
@@ -9,6 +9,7 @@ const demoSessionKey = 'kerala-hub-demo-admin';
 
 export default function Login({showDashboard = false, adminView = 'Dashboard'}){
   const [error, setError] = useState('');
+  const mobileMenu = useRef(null);
 
   function signIn(event){
     event.preventDefault();
@@ -27,13 +28,8 @@ export default function Login({showDashboard = false, adminView = 'Dashboard'}){
   }
 
   if (showDashboard && sessionStorage.getItem(demoSessionKey) === 'admin'){
-    return <main className="section grid w-full gap-5 px-4 sm:px-6 md:grid-cols-[15rem_minmax(0,1fr)] lg:px-8">
-      <aside className="flex flex-col gap-4 rounded-2xl border border-neutral-200 bg-white p-3 text-brand-dark shadow-sm md:min-h-96 md:p-4">
-        <div className="flex items-center gap-3 border-b border-neutral-200 px-2 pb-4">
-          <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-brand text-white"><ShieldCheck size={19} aria-hidden="true"/></span>
-          <p className="text-sm font-semibold">Kerala Hub Admin</p>
-        </div>
-        <nav aria-label="Admin navigation" className="flex flex-wrap gap-1 md:flex-col">
+    const adminMenu = <>
+        <nav aria-label="Admin navigation" className="flex flex-col gap-1">
           {[
             {label: 'Dashboard', href: '/dashboard/', icon: LayoutDashboard, active: adminView === 'Dashboard'},
             {label: 'Customers', href: '/dashboard/customers/', icon: Users, active: adminView === 'Customers'},
@@ -42,11 +38,33 @@ export default function Login({showDashboard = false, adminView = 'Dashboard'}){
             <Icon size={18} aria-hidden="true"/> {label}
           </a>)}
         </nav>
-        <div className="border-t border-neutral-200 pt-3 md:mt-auto">
+        <div className="border-t border-neutral-200 pt-3 mt-auto">
           <button type="button" className="flex min-h-11 w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-brand" onClick={signOut}>
             <LogOut size={18} aria-hidden="true"/> Sign out
           </button>
         </div>
+    </>;
+    return <main className="section grid w-full gap-5 px-4 sm:px-6 md:grid-cols-[15rem_minmax(0,1fr)] lg:px-8">
+      <button type="button" className="outline md:hidden" aria-haspopup="dialog" onClick={()=>mobileMenu.current.showModal()}>
+        <Menu size={18} aria-hidden="true"/> Admin menu
+      </button>
+      <dialog ref={mobileMenu} aria-labelledby="mobile-admin-title" className="fixed inset-y-0 left-0 m-0 h-dvh max-h-none w-72 max-w-[85vw] border-0 bg-white p-0 text-brand-dark backdrop:bg-black/50 md:hidden">
+        <div className="flex min-h-full flex-col gap-4 p-4">
+          <div className="flex items-center justify-between gap-2 border-b border-neutral-200 pb-3">
+            <h2 id="mobile-admin-title" className="text-sm font-semibold">Kerala Hub Admin</h2>
+            <form method="dialog">
+              <button className="rounded-lg p-2 hover:bg-neutral-100" aria-label="Close admin menu"><X size={20} aria-hidden="true"/></button>
+            </form>
+          </div>
+          {adminMenu}
+        </div>
+      </dialog>
+      <aside className="hidden md:flex flex-col gap-4 rounded-2xl border border-neutral-200 bg-white p-3 text-brand-dark shadow-sm md:min-h-96 md:p-4">
+        <div className="flex items-center gap-3 border-b border-neutral-200 px-2 pb-4">
+          <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-brand text-white"><ShieldCheck size={19} aria-hidden="true"/></span>
+          <p className="text-sm font-semibold">Kerala Hub Admin</p>
+        </div>
+        {adminMenu}
       </aside>
       <section aria-labelledby="dashboard-title" className="min-w-0 rounded-2xl bg-brand-tint p-5 sm:p-7">
         <div className="flex flex-wrap items-center justify-between gap-4">
