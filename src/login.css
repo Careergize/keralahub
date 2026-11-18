@@ -10,4 +10,10 @@
 .login-fields {@apply my-6 grid gap-4;}
 .login-fields label {@apply grid gap-1.5 text-sm font-medium text-brand-dark;}
 .login-fields input {@apply min-h-11 rounded-lg border border-brand-mist bg-brand-paper px-3;}
-.login-fields button {@apply cursor-not-allowed bg-brand-mist text-brand-dark hover:bg-brand-mist;}
+.login-fields button:disabled {@apply cursor-wait opacity-60;}
+.admin-editor {display:grid;gap:14px;margin:20px 0;padding:20px;background:white;border-radius:12px;}
+.admin-editor label {display:grid;gap:6px;}
+.admin-editor input,.admin-editor select,.admin-editor textarea {width:100%;padding:10px;border:1px solid #b9c9bf;border-radius:6px;background:white;}
+.admin-editor textarea {min-height:90px;}
+.admin-table {width:100%;border-collapse:collapse;background:white;margin-top:20px;}
+.admin-table th,.admin-table td {padding:12px;text-align:left;border-bottom:1px solid #d9e2d7;max-width:280px;white-space:pre-wrap;overflow-wrap:anywhere;}

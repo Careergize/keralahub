@@ -1,3 +1,5 @@
+import {adminApi, sessionKey} from './adminApi';
+import AdminRecords from './AdminRecords';
 import {useState} from 'react';
 import {ArrowLeft, CalendarDays, LayoutDashboard, LogIn, LogOut, ShieldCheck, Users, X} from 'lucide-react';
 import {destinationPhotos} from './destinationPhotos';
@@ -5,40 +7,51 @@ import './login.css';
 
 const photo = destinationPhotos.Alappuzha;
 
-const demoSessionKey = 'kerala-hub-demo-admin';
+
 
 export default function Login({showDashboard = false, adminView = 'Dashboard'}){
   const [error, setError] = useState('');
 
-  function signIn(event){
+  const [busy, setBusy] = useState(false);
+
+  async function signIn(event){
     event.preventDefault();
-    const fields = new FormData(event.currentTarget);
-    if (fields.get('username').trim() !== 'admin' || fields.get('password') !== 'test@123'){
-      setError('Incorrect username or password.');
-      return;
-    }
-    sessionStorage.setItem(demoSessionKey, 'admin');
-    window.location.assign('/dashboard/');
+    const form = event.currentTarget;
+    const fields = new FormData(form);
+    setBusy(true); setError('');
+    try {
+      const data = await adminApi('signIn', {username: fields.get('username'), password: fields.get('password')});
+      if (data.error) throw new Error(data.error);
+      if (!data.token) throw new Error('Invalid login response.');
+      sessionStorage.setItem(sessionKey, data.token);
+      window.location.assign('/dashboard/');
+    } catch (error) { setError(error.message); }
+    finally { form.elements.password.value = ''; setBusy(false); }
   }
 
-  function signOut(){
-    sessionStorage.removeItem(demoSessionKey);
+  async function signOut(){
+    const token = sessionStorage.getItem(sessionKey);
+    setBusy(true);
+    try { await adminApi('signOut', {token}); }
+    catch (error) { setError(error.message); setBusy(false); return; }
+    sessionStorage.removeItem(sessionKey);
     window.location.replace('/login/');
   }
 
-  if (showDashboard && sessionStorage.getItem(demoSessionKey) === 'admin'){
+  if (showDashboard && sessionStorage.getItem(sessionKey)){
     const adminMenu = <>
         <nav aria-label="Admin navigation" className="flex flex-col gap-1">
           {[
             {label: 'Dashboard', href: '/dashboard/', icon: LayoutDashboard, active: adminView === 'Dashboard'},
             {label: 'Customers', href: '/dashboard/customers/', icon: Users, active: adminView === 'Customers'},
             {label: 'Bookings', href: '/dashboard/bookings/', icon: CalendarDays, active: adminView === 'Bookings'},
+            ...['Enquiries','Invoices','Quotations','Packages'].map(label => ({label, href: '/dashboard/' + label.toLowerCase() + '/', icon: CalendarDays, active: adminView === label})),
           ].map(({label, href, icon: Icon, active}) => <a key={href} href={href} aria-current={active ? 'page' : undefined} className="flex min-h-11 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-brand aria-[current=page]:bg-brand-tint aria-[current=page]:font-semibold aria-[current=page]:text-brand-dark aria-[current=page]:ring-1 aria-[current=page]:ring-brand/25">
             <Icon size={18} aria-hidden="true"/> {label}
           </a>)}
         </nav>
         <div className="border-t border-neutral-200 pt-3 mt-auto">
-          <button type="button" className="flex min-h-11 w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-brand" onClick={signOut}>
+          <button type="button" className="flex min-h-11 w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-brand" disabled={busy} onClick={signOut}>
             <LogOut size={18} aria-hidden="true"/> Sign out
           </button>
         </div>
@@ -66,16 +79,8 @@ export default function Login({showDashboard = false, adminView = 'Dashboard'}){
         <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 id="dashboard-title" className="text-3xl font-semibold text-brand-dark">{adminView === 'Dashboard' ? 'Admin Dashboard' : adminView}</h1>
       </div>
-      {adminView !== 'Dashboard' ? <p className="mt-3 text-neutral-700">No {adminView.toLowerCase()} to display.</p> : <>
-      <p className="mt-3 text-neutral-700">Welcome, admin. This dashboard displays sample data.</p>
-      <dl className="mt-8 grid gap-4 sm:grid-cols-3">
-        {[['Bookings', '12'], ['Open enquiries', '5'], ['Active packages', '8']].map(([label, value]) =>
-          <div key={label} className="rounded-xl border border-neutral-200 bg-white p-5">
-            <dt className="text-sm text-neutral-700">{label}</dt>
-            <dd className="mt-2 text-3xl font-semibold text-brand-dark">{value}</dd>
-          </div>
-        )}
-      </dl></>}
+      {error && <p role="alert">{error}</p>}
+      <AdminRecords view={adminView}/>
       </section>
     </main>;
   }
@@ -91,11 +96,11 @@ export default function Login({showDashboard = false, adminView = 'Dashboard'}){
       <section className="login-content" aria-labelledby="login-title">
         <a href="/" className="inline-flex items-center gap-2 text-sm font-medium text-brand"><ArrowLeft size={16}/> Back to home</a>
         <h1 id="login-title" className="mt-5 text-3xl font-semibold tracking-tight text-brand-dark">Sign in to Kerala Hub</h1>
-        <p className="mt-3 text-sm text-neutral-700">Sign in with your demo admin credentials.</p>
+        <p className="mt-3 text-sm text-neutral-700">Use the username and password from your Users sheet.</p>
         <form className="login-fields" onSubmit={signIn}>
           <label>Username<input name="username" autoComplete="username" required/></label>
           <label>Password<input type="password" name="password" autoComplete="current-password" required/></label>
-          <button type="submit" className="pill"><LogIn size={17}/> Sign in</button>
+          <button type="submit" disabled={busy} className="pill"><LogIn size={17}/> {busy ? 'Signing in…' : 'Sign in'}</button>
         {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
         </form>
         <a href="/contact/" className="inline-block text-sm font-semibold text-brand underline">Contact us for help</a>
