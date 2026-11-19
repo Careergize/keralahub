@@ -72,15 +72,15 @@ export default function AdminRecords({view}) {
     doc.close();
   }
 
-  return <div>
+  return <div className="admin-records">
     {error && <p role="alert" className="my-4 text-red-700">{error} <button onClick={() => setRevision(n => n+1)}>Retry loading</button></p>}
     {!data && !error && <p role="status" className="mt-4">Loading records…</p>}
     {data?.counts && <dl className="mt-8 grid gap-4 sm:grid-cols-2">{data.counts.map(([label,count]) => <div key={label} className="rounded-xl bg-white p-5"><dt>{label}</dt><dd className="text-3xl font-semibold">{count}</dd></div>)}</dl>}
     {data?.columns && <>
       {cms&&<p className="my-4 rounded-xl bg-white p-4 text-sm">Only Published records appear publicly. Sort order controls display order. Changes appear within 30 seconds or on refresh.{view==='Pages'&&' All public pages use PageSections. Paths use leading and trailing slashes, such as /about-us/.'}{view==='PageSections'&&' Page is the page path. Type controls the layout. Cards, Gallery and FAQ use Media rows whose Group matches this section Key. Override is legacy and not rendered.'}{view==='FormFields'&&' Form is the form Key. Select Options are separated with |. The name, email, destination and message fields must remain published for the form to work.'}{view==='Navigation'&&' Location selects the menu. Group creates a submenu. Links to unpublished pages are hidden automatically.'}{view==='Media'&&' Group matches a Cards, Gallery or FAQ section Key. Use credits for reusable image attribution.'}</p>}
-      <label className="my-4 block">Search records<input className="ml-3 rounded-lg border bg-white p-2" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search this table"/></label>
-      <button className="pill mt-4" disabled={busy} onClick={() => setEditing({})}>New record</button>
-      {editing && <form className="admin-editor" onSubmit={save}>
+      <div className="admin-toolbar"><label className="admin-search">Search records<input type="search" className="rounded-lg border bg-white p-2" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search records…"/></label>
+      <button className="pill admin-new-record" disabled={busy} onClick={() => setEditing({})}>+ New record</button></div>
+      {editing && <form className="admin-editor admin-record-editor" onSubmit={save} aria-label={editing.ID?'Edit record':'New record'}>
         <h2>{editing.ID ? 'Edit record' : 'New record'}</h2>
         {data.columns.filter(key => !['ID','Balance','Created','Submission ID'].includes(key)).map(key => {
           const required = (cms?['Status']:['Name','Customer ID','Service','Status','Date','Description','Amount','Paid']).includes(key);
@@ -95,9 +95,9 @@ export default function AdminRecords({view}) {
               : <input {...attrs} maxLength={500} type={key === 'Date' ? 'date' : ['Amount','Paid'].includes(key) ? 'number' : key === 'Email' ? 'email' : 'text'} min={['Amount','Paid'].includes(key) ? '0' : undefined} step={['Amount','Paid'].includes(key) ? '0.01' : undefined}/>}
           </label>;
         })}
-        <div className="flex gap-3"><button className="pill" disabled={busy}>{busy ? 'Saving…' : 'Save'}</button><button type="button" disabled={busy} onClick={() => setEditing(null)}>Cancel</button></div>
+        <div className="admin-editor-actions flex gap-3"><button className="pill" disabled={busy}>{busy ? 'Saving…' : 'Save'}</button><button type="button" disabled={busy} onClick={() => setEditing(null)}>Cancel</button></div>
       </form>}
-      {!data.rows.length ? <p className="mt-4">No records yet.</p> : <div className="overflow-auto"><table className="admin-table"><thead><tr>{data.columns.filter(c => c !== 'Submission ID').map(c => <th scope="col" key={c}>{c}</th>)}<th scope="col">Actions</th></tr></thead><tbody>{data.rows.filter(row=>row.join(' ').toLowerCase().includes(query.toLowerCase())).map(row => <tr key={row[0]}>{row.map((value,i) => data.columns[i] === 'Submission ID' ? null : <td key={i}>{value}</td>)}<td><button className="underline" disabled={busy} onClick={() => setEditing(Object.fromEntries(data.columns.map((key,i) => [key,row[i]])))}>Edit</button><button className="ml-3 text-red-700 underline" disabled={busy} onClick={()=>remove(row)}>Delete</button>{['Invoices','Quotations'].includes(view) && <button className="ml-3 underline" onClick={() => printRecord(row)}>Print / PDF</button>}</td></tr>)}</tbody></table></div>}
+      {!data.rows.filter(row=>row.join(' ').toLowerCase().includes(query.toLowerCase())).length ? <p className="admin-empty">{query?'No matching records. Try another search.':'No records yet. Create your first record above.'}</p> : <div className="admin-table-scroll"><table className="admin-table"><thead><tr>{data.columns.filter(c => c !== 'Submission ID').map(c => <th scope="col" key={c}>{c}</th>)}<th scope="col">Actions</th></tr></thead><tbody>{data.rows.filter(row=>row.join(' ').toLowerCase().includes(query.toLowerCase())).map(row => <tr key={row[0]}>{row.map((value,i) => data.columns[i] === 'Submission ID' ? null : <td key={i} data-label={data.columns[i]} className={data.columns[i]==='ID'?'record-id':data.columns[i]==='Status'?'record-status':undefined}><span>{value||'—'}</span></td>)}<td className="record-actions" data-label="Actions"><button className="underline" disabled={busy} onClick={() => setEditing(Object.fromEntries(data.columns.map((key,i) => [key,row[i]])))}>Edit</button><button className="ml-3 text-red-700 underline" disabled={busy} onClick={()=>remove(row)}>Delete</button>{['Invoices','Quotations'].includes(view) && <button className="ml-3 underline" onClick={() => printRecord(row)}>Print / PDF</button>}</td></tr>)}</tbody></table></div>}
     </>}
   </div>;
 }

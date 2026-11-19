@@ -17,3 +17,62 @@
 .admin-editor textarea {min-height:90px;}
 .admin-table {width:100%;border-collapse:collapse;background:white;margin-top:20px;}
 .admin-table th,.admin-table td {padding:12px;text-align:left;border-bottom:1px solid #d9e2d7;max-width:280px;white-space:pre-wrap;overflow-wrap:anywhere;}
+
+/* Dashboard: roomy tables on desktop, labeled record cards on phones. */
+.admin-toolbar {display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:24px 0 16px;}
+.admin-search {display:grid;gap:8px;flex:1;max-width:480px;font-size:14px;font-weight:500;color:#304c27;}
+.admin-search input {width:100%;min-width:0;min-height:46px;border-color:#d9e2d7;padding:12px 14px;font-size:16px;}
+.admin-new-record {min-height:46px;}
+.admin-table-scroll {overflow:auto;}
+.admin-table {min-width:860px;}
+.admin-table th {white-space:nowrap;font-size:13px;color:#526349;background:#f4f7f1;}
+.admin-table td {min-width:110px;font-size:14px;line-height:1.6;}
+.admin-table .record-actions {min-width:190px;}
+.record-status span {display:inline-block;border-radius:999px;background:#edf4e8;color:#304c27;padding:4px 10px;font-size:13px;font-weight:600;}
+.admin-empty {padding:32px 20px;background:white;border-radius:16px;text-align:center;color:#626a5d;}
+.admin-bottom-nav {display:none;}
+.admin-editor-actions {position:sticky;bottom:0;background:white;padding:12px 0;z-index:1;}
+.admin-record-editor {border:1px solid #dce4d6;}
+@media(max-width:767px){
+ .admin-site-header {min-height:60px;padding:6px 16px;}
+ .admin-site-header .brand img {width:140px;}
+ .admin-site-header > button {min-width:44px;min-height:44px;display:grid;place-items:center;border-radius:12px;background:#ffffff12;}
+ .admin-shell {display:block;padding:16px 14px calc(96px + env(safe-area-inset-bottom));background:#f3f6f0;min-height:calc(100dvh - 60px);}
+ .admin-workspace {padding:0;background:transparent;border-radius:0;}
+ .admin-workspace #dashboard-title {font-size:26px;line-height:34px;letter-spacing:-.02em;}
+ .admin-toolbar {display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:10px;margin-top:20px;}
+ .admin-search {max-width:none;font-size:13px;gap:6px;}
+ .admin-search input {border-radius:12px;background:white;}
+ .admin-new-record {padding:12px 14px;font-size:13px;border-radius:12px;white-space:nowrap;}
+ .admin-table-scroll {overflow:visible;}
+ .admin-table {display:block;min-width:0;background:transparent;margin-top:16px;}
+ .admin-table thead {position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
+ .admin-table tbody {display:grid;gap:16px;}
+ .admin-table tr {display:block;min-width:0;padding:4px 16px 0;border:1px solid #e0e7db;border-radius:18px;background:white;box-shadow:0 3px 14px #304c2705;}
+ .admin-table td {display:grid;grid-template-columns:100px minmax(0,1fr);gap:12px;min-width:0;max-width:none;padding:12px 0;border-bottom:1px solid #f0f2ed;white-space:normal;overflow-wrap:break-word;font-size:14px;line-height:1.55;}
+ .admin-table td::before {content:attr(data-label);font-size:12px;font-weight:500;color:#737b6d;line-height:1.7;}
+ .admin-table td > span {min-width:0;white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;}
+ .admin-table .record-id {font-size:12px;color:#7a8374;}
+ .admin-table .record-actions {display:flex;flex-wrap:wrap;gap:8px;min-width:0;border:0;padding:12px 0;}
+ .admin-table .record-actions::before {display:none;}
+ .admin-table .record-actions button {min-height:44px;margin:0;padding:10px 16px;border-radius:10px;background:#edf4e8;color:#304c27;font-size:14px;font-weight:500;text-decoration:none;}
+ .admin-table .record-actions button:nth-child(2) {background:#fff1ef;color:#a92e25;margin-left:auto;}
+ .admin-bottom-nav {position:fixed;z-index:30;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:white;border-top:1px solid #e0e7db;box-shadow:0 -4px 20px #304c2708;}
+ .admin-bottom-nav :is(a,button) {display:flex;min-height:50px;align-items:center;justify-content:center;flex-direction:column;gap:5px;border-radius:12px;color:#737b6d;}
+ .admin-bottom-nav span {font-size:10px;font-weight:500;}
+ .admin-bottom-nav [aria-current='page'] {background:#edf4e8;color:#304c27;}
+ .admin-record-editor {padding:18px;margin:16px 0;border-radius:18px;}
+ .admin-record-editor h2 {font-size:22px;line-height:30px;}
+ .admin-record-editor label {font-size:13px;color:#526349;}
+ .admin-record-editor :is(input,select,textarea) {min-height:48px;font-size:16px;border-radius:10px;min-width:0;}
+ .admin-record-editor textarea {min-height:120px;}
+ .admin-editor-actions {gap:12px;}
+ .admin-editor-actions > button {flex:1;min-height:46px;border-radius:12px;}
+ #mobile-admin-menu {border-radius:0 20px 20px 0;}
+ #mobile-admin-menu nav {gap:4px;}
+ #mobile-admin-menu nav a {min-height:46px;}
+ .login-card {border-radius:20px;}
+ .login-content {padding:24px;}
+ .login-fields input {min-height:50px;font-size:16px;}
+}
+@media(max-width:359px){.admin-toolbar {grid-template-columns:1fr;}.admin-new-record {justify-self:start;}.admin-table td {grid-template-columns:80px minmax(0,1fr);}}

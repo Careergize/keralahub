@@ -2,7 +2,7 @@ import {adminApi, sessionKey} from './adminApi';
 import AdminRecords from './AdminRecords';
 import cmsSchema from './cmsSchema.json';
 import {useState} from 'react';
-import {ArrowLeft, CalendarDays, LayoutDashboard, LogIn, LogOut, ShieldCheck, Users, X} from 'lucide-react';
+import {ArrowLeft, CalendarDays, LayoutDashboard, LogIn, LogOut, ShieldCheck, Users, X, Menu, MessageSquare} from 'lucide-react';
 import {useSetting,useCollection,mediaUrl,safeUrl} from './siteContent';
 import './login.css';
 
@@ -60,7 +60,7 @@ export default function Login({showDashboard = false, adminView = 'Dashboard'}){
           </button>
         </div>
     </>;
-    return <main className="section grid w-full gap-5 px-4 sm:px-6 md:grid-cols-[15rem_minmax(0,1fr)] lg:px-8">
+    return <main className="admin-shell section grid w-full gap-5 px-4 sm:px-6 md:grid-cols-[15rem_minmax(0,1fr)] lg:px-8">
       <dialog id="mobile-admin-menu" aria-labelledby="mobile-admin-title" className="fixed inset-y-0 left-0 m-0 h-dvh max-h-none w-72 max-w-[85vw] border-0 bg-white p-0 text-brand-dark backdrop:bg-black/50 md:hidden">
         <div className="flex min-h-full flex-col gap-4 p-4">
           <div className="flex items-center justify-between gap-2 border-b border-neutral-200 pb-3">
@@ -79,13 +79,14 @@ export default function Login({showDashboard = false, adminView = 'Dashboard'}){
         </div>
         {adminMenu}
       </aside>
-      <section aria-labelledby="dashboard-title" className="min-w-0 rounded-2xl bg-brand-tint p-5 sm:p-7">
+      <section aria-labelledby="dashboard-title" className="admin-workspace min-w-0 rounded-2xl bg-brand-tint p-5 sm:p-7">
         <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 id="dashboard-title" className="text-3xl font-semibold text-brand-dark">{adminView === 'Dashboard' ? 'Admin Dashboard' : adminView}</h1>
       </div>
       {error && <p role="alert">{error}</p>}
       <AdminRecords view={adminView}/>
       </section>
+      <nav className="admin-bottom-nav" aria-label="Quick admin navigation">{[{label:'Home',href:'/dashboard/',icon:LayoutDashboard,active:adminView==='Dashboard'},{label:'Enquiries',href:'/dashboard/enquiries/',icon:MessageSquare,active:adminView==='Enquiries'},{label:'Bookings',href:'/dashboard/bookings/',icon:CalendarDays,active:adminView==='Bookings'},{label:'Customers',href:'/dashboard/customers/',icon:Users,active:adminView==='Customers'}].map(({label,href,icon:Icon,active})=><a key={href} href={href} aria-current={active?'page':undefined}><Icon size={21}/><span>{label}</span></a>)}<button type="button" onClick={()=>document.getElementById('mobile-admin-menu')?.showModal()}><Menu size={21}/><span>More</span></button></nav>
     </main>;
   }
   return <main className="section wrap">
