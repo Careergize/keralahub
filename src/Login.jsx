@@ -1,15 +1,18 @@
 import {adminApi, sessionKey} from './adminApi';
 import AdminRecords from './AdminRecords';
+import cmsSchema from './cmsSchema.json';
 import {useState} from 'react';
 import {ArrowLeft, CalendarDays, LayoutDashboard, LogIn, LogOut, ShieldCheck, Users, X} from 'lucide-react';
-import {destinationPhotos} from './destinationPhotos';
+import {useSetting,useCollection,mediaUrl,safeUrl} from './siteContent';
 import './login.css';
 
-const photo = destinationPhotos.Alappuzha;
 
 
 
 export default function Login({showDashboard = false, adminView = 'Dashboard'}){
+  const photoSrc=mediaUrl(useSetting('loginImage'));
+  const brandName=useSetting('brandName');
+  const photo=useCollection('Media').find(row=>row['Image URL']===photoSrc);
   const [error, setError] = useState('');
 
   const [busy, setBusy] = useState(false);
@@ -45,7 +48,8 @@ export default function Login({showDashboard = false, adminView = 'Dashboard'}){
             {label: 'Dashboard', href: '/dashboard/', icon: LayoutDashboard, active: adminView === 'Dashboard'},
             {label: 'Customers', href: '/dashboard/customers/', icon: Users, active: adminView === 'Customers'},
             {label: 'Bookings', href: '/dashboard/bookings/', icon: CalendarDays, active: adminView === 'Bookings'},
-            ...['Enquiries','Invoices','Quotations','Packages'].map(label => ({label, href: '/dashboard/' + label.toLowerCase() + '/', icon: CalendarDays, active: adminView === label})),
+            ...['Enquiries','Invoices','Quotations','Packages','Subscribers'].map(label => ({label, href: '/dashboard/' + label.toLowerCase() + '/', icon: CalendarDays, active: adminView === label})),
+            ...Object.keys(cmsSchema).map(label => ({label, href:'/dashboard/'+label.toLowerCase()+'/',icon:LayoutDashboard,active:adminView===label})),
           ].map(({label, href, icon: Icon, active}) => <a key={href} href={href} aria-current={active ? 'page' : undefined} className="flex min-h-11 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-brand aria-[current=page]:bg-brand-tint aria-[current=page]:font-semibold aria-[current=page]:text-brand-dark aria-[current=page]:ring-1 aria-[current=page]:ring-brand/25">
             <Icon size={18} aria-hidden="true"/> {label}
           </a>)}
@@ -85,17 +89,14 @@ export default function Login({showDashboard = false, adminView = 'Dashboard'}){
     </main>;
   }
   return <main className="section wrap">
-    <div className="login-card">
-      <figure className="login-photo">
-        <img src={photo.src} alt={photo.alt}/>
-        <figcaption>
-          <a href={photo.source}>{photo.alt} · {photo.author}</a>
-          {' · '}<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
-        </figcaption>
-      </figure>
+    <div className="login-card" style={!photoSrc?{gridTemplateColumns:'1fr'}:undefined}>
+      {photoSrc&&<figure className="login-photo">
+        <img src={photoSrc} alt={photo?.Alt||''}/>
+        {photo?.Credit&&<figcaption>{safeUrl(photo.Source)?<a href={safeUrl(photo.Source)}>{photo.Credit}</a>:photo.Credit}{safeUrl(photo.License)&&<> · <a href={safeUrl(photo.License)}>{photo.License}</a></>}</figcaption>}
+      </figure>}
       <section className="login-content" aria-labelledby="login-title">
         <a href="/" className="inline-flex items-center gap-2 text-sm font-medium text-brand"><ArrowLeft size={16}/> Back to home</a>
-        <h1 id="login-title" className="mt-5 text-3xl font-semibold tracking-tight text-brand-dark">Sign in to Kerala Hub</h1>
+        <h1 id="login-title" className="mt-5 text-3xl font-semibold tracking-tight text-brand-dark">Sign in{brandName?' to '+brandName:''}</h1>
         <p className="mt-3 text-sm text-neutral-700">Use the username and password from your Users sheet.</p>
         <form className="login-fields" onSubmit={signIn}>
           <label>Username<input name="username" autoComplete="username" required/></label>

@@ -2,7 +2,6 @@
 
 .contact-hero {
   @apply grid h-[270px] content-center justify-items-center gap-4 bg-cover bg-center px-5 text-center text-white md:h-[350px];
-  background-image: linear-gradient(#0003,#0003),url('https://atlastrip-wp.egenstheme.com/wp-content/uploads/2026/07/breadcrumb-bg5.webp');
   background-color: var(--color-brand-dark);
 }
 .contact-hero h1 {@apply text-5xl leading-tight font-semibold md:text-[60px];}
@@ -32,3 +31,10 @@
 .contact-faq details[open] summary {@apply text-brand;}
 .contact-faq details[open] svg {@apply rotate-180;}
 .contact-faq details p {@apply px-5 pb-5 text-sm leading-7 text-neutral-600 md:px-6;}
+
+.enquiry .contact-sheet-form {display:block;}
+.enquiry .contact-sheet-form > h2 {margin-bottom:32px;}
+.enquiry .contact-sheet-form > p {margin:16px 0;color:#525252;font-size:14px;line-height:24px;}
+.enquiry .contact-sheet-form fieldset {gap:20px 24px;}
+.enquiry .contact-sheet-form textarea {min-height:150px;}
+.enquiry .contact-sheet-form .pill {min-height:44px;}

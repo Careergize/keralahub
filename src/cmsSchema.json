@@ -1,0 +1,163 @@
+{
+  "Tours": [
+    "ID",
+    "Title",
+    "Places",
+    "Days",
+    "Category",
+    "Description",
+    "Price",
+    "Image URL",
+    "Featured",
+    "Status",
+    "Sort order"
+  ],
+  "Experiences": [
+    "ID",
+    "Title",
+    "Places",
+    "Days",
+    "Category",
+    "Description",
+    "Price",
+    "Image URL",
+    "Featured",
+    "Status",
+    "Sort order"
+  ],
+  "Destinations": [
+    "ID",
+    "Name",
+    "Region",
+    "Description",
+    "Image URL",
+    "Status",
+    "Sort order"
+  ],
+  "Hotels": [
+    "ID",
+    "Name",
+    "Location",
+    "Description",
+    "Price",
+    "Image URL",
+    "Status",
+    "Sort order"
+  ],
+  "Vehicles": [
+    "ID",
+    "Name",
+    "Seats",
+    "Daily rate",
+    "Description",
+    "Image URL",
+    "Status",
+    "Sort order"
+  ],
+  "VisaOptions": [
+    "ID",
+    "Country",
+    "Categories",
+    "Description",
+    "Image URL",
+    "Status",
+    "Sort order"
+  ],
+  "Offers": [
+    "ID",
+    "Title",
+    "Description",
+    "Image URL",
+    "Link",
+    "Status",
+    "Sort order"
+  ],
+  "Testimonials": [
+    "ID",
+    "Name",
+    "Quote",
+    "Rating",
+    "Image URL",
+    "Status",
+    "Sort order"
+  ],
+  "Pages": [
+    "ID",
+    "Path",
+    "Title",
+    "Description",
+    "Image URL",
+    "Mode",
+    "Show in menu",
+    "Status",
+    "Sort order"
+  ],
+  "PageSections": [
+    "ID",
+    "Page",
+    "Key",
+    "Type",
+    "Title",
+    "Body",
+    "Image URL",
+    "Video URL",
+    "Link",
+    "Button label",
+    "Collection",
+    "Form",
+    "Status",
+    "Sort order"
+  ],
+  "Forms": [
+    "ID",
+    "Key",
+    "Title",
+    "Description",
+    "Button label",
+    "WhatsApp",
+    "Status",
+    "Sort order"
+  ],
+  "FormFields": [
+    "ID",
+    "Form",
+    "Name",
+    "Label",
+    "Type",
+    "Options",
+    "Required",
+    "Status",
+    "Sort order"
+  ],
+  "SiteSettings": [
+    "ID",
+    "Key",
+    "Value",
+    "Status",
+    "Sort order"
+  ],
+  "Navigation": [
+    "ID",
+    "Location",
+    "Group",
+    "Label",
+    "Link",
+    "Target",
+    "Status",
+    "Sort order"
+  ],
+  "Media": [
+    "ID",
+    "Group",
+    "Title",
+    "Description",
+    "Alt",
+    "Image URL",
+    "Link",
+    "Source",
+    "Credit",
+    "License",
+    "Status",
+    "Sort order"
+  ]
+}
