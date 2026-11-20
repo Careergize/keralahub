@@ -2,9 +2,10 @@ import React from 'react';
 import {MapPin,Compass,MessageCircle,ChevronDown,ChevronRight} from 'lucide-react';
 import {useCollection,safeUrl,mediaUrl} from './siteContent';
 import CmsForm from './CmsForm';
+import {businessAddress} from './businessDetails';
 export default function ContactSection({section}){
   const media=useCollection('Media'),navigation=useCollection('Navigation');
-  const rows=media.filter(row=>row.Group===section.Key);
+  const rows=media.filter(row=>row.Group===section.Key).map((row,index)=>section.Type==='Cards'&&index===0?{...row,Title:'Our Address',Description:businessAddress}:row);
   const home=navigation.find(row=>row.Location==='Header'&&row.Link==='/');
   const current=navigation.find(row=>row.Location==='Header'&&row.Link==='/contact/');
   if(section.Type==='Hero')return <section id={section.Key} className="contact-hero" style={mediaUrl(section['Image URL'])?{backgroundImage:`linear-gradient(#0003,#0003),url(${mediaUrl(section['Image URL'])})`}:undefined}>{section.Title&&<h1>{section.Title}</h1>}<nav aria-label="Breadcrumb">{home&&<a href="/">{home.Label}</a>}<ChevronRight size={18}/>{current&&<span aria-current="page">{current.Label}</span>}</nav></section>;

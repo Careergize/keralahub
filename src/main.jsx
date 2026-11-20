@@ -12,6 +12,8 @@ import cmsSchema from './cmsSchema.json';
 import {whatsappUrl} from './whatsapp';
 import './style.css';
 import './contact.css';
+import {businessAddress} from './businessDetails';
+import AboutUs from './AboutUs';
 
 const currentPath=window.location.pathname.replace(/\/?$/,'/');
 const adminViews=Object.fromEntries(['Customers','Bookings','Enquiries','Invoices','Quotations','Packages','Subscribers',...Object.keys(cmsSchema)].map(name=>['/dashboard/'+name.toLowerCase()+'/',name]));
@@ -27,6 +29,16 @@ function Brand(){
 function NavLinks({location,onNavigate,loginOnly=false}){
   const {collections}=useSiteContent();
   const rows=navigationRows(collections,location).filter(row=>!(['Header','Header actions'].includes(location)&&/^\/login\/?(?:[?#]|$)/.test(row.Link))).filter(row=>location!=='Header actions'||(row.Link.split(/[?#]/)[0]==='/login/')===loginOnly);
+  for(const row of rows)if(row.Link==='/#about')row.Link='/about/';
+  if(['Header','Footer explore'].includes(location)&&!rows.some(row=>['/about/','/about-us/'].includes(row.Link)))rows.push({ID:'about-page-link',Label:'About us',Link:'/about/'});
+  if(location==='Header'){
+    const aboutIndex=rows.findIndex(row=>['/about/','/about-us/'].includes(row.Link));
+    if(aboutIndex>=0){
+      const [about]=rows.splice(aboutIndex,1);
+      const servicesIndex=rows.findIndex(row=>(row.Group||'').toLowerCase()==='services'||(row.Label||'').toLowerCase()==='services');
+      rows.splice(servicesIndex>=0?servicesIndex:rows.length,0,about);
+    }
+  }
   const seen=new Set();
   const link=row=><a key={row.ID} className={location==='Header actions'?(loginOnly?'header-login':'pill'):undefined} href={safeUrl(row.Link)} target={row.Target==='_blank'?'_blank':undefined} rel={row.Target==='_blank'?'noopener noreferrer':undefined} aria-current={row.Link===currentPath?'page':undefined} onClick={event=>{const details=event.currentTarget.closest('details');if(details)details.open=false;onNavigate?.();}}>{location==='Header actions'&&(loginOnly?<LogIn size={16}/>:<MessageCircle size={17}/>)}{row.Label}</a>;
   return rows.map(row=>{const group=row.Group;if(!group)return link(row);if(seen.has(group))return null;seen.add(group);return <details className="pages-dropdown relative" key={group}><summary>{group}<ChevronDown size={13}/></summary><div>{rows.filter(row=>row.Group===group).map(link)}</div></details>;});
@@ -40,7 +52,8 @@ function Welcome(){
 function Footer({onPlan}){
   const title=useSetting('newsletterTitle'),description=useSetting('newsletterDescription'),enabled=useSetting('newsletterEnabled');
   const label=useSetting('ui.email'),button=useSetting('ui.subscribe'),saving=useSetting('ui.saving'),saved=useSetting('ui.subscribed');
-  const address=useSetting('address'),copyright=useSetting('copyrightText'),explore=useSetting('footerExploreTitle'),plan=useSetting('footerPlanTitle'),social=useSetting('footerSocialTitle');
+  const address=businessAddress;
+  const copyright=useSetting('copyrightText'),explore=useSetting('footerExploreTitle'),plan=useSetting('footerPlanTitle'),social=useSetting('footerSocialTitle');
   const [status,setStatus]=useState(''),[busy,setBusy]=useState(false);
   async function subscribe(event){event.preventDefault();if(busy)return;const form=event.currentTarget;setBusy(true);setStatus(saving);try{await adminApi('subscribe',{email:new FormData(form).get('email')});setStatus(saved);form.reset();}catch(error){setStatus(error.message);}finally{setBusy(false);}}
   return <footer><div className="wrap">
@@ -55,7 +68,7 @@ function App(){
   const brand=useSetting('brandName'),currency=useSetting('currency'),whatsappNumber=useSetting('whatsappNumber'),whatsappMessage=useSetting('whatsappMessage'),whatsappLabel=useSetting('ui.whatsapp'),menuLabel=useSetting('ui.menu'),tripTitle=useSetting('ui.enquiryTitle'),tripForm=useSetting('tripFormKey');
   const [menu,setMenu]=useState(false),[planner,setPlanner]=useState(false);
   useEffect(()=>{
-    const page=pages.find(row=>row.Path===currentPath);
+    const page=['/about/','/about-us/'].includes(currentPath)?{Title:'About Us',Description:'Meet Jishnu, founder of Kerala Hub Holidays. Discover our personal approach to Kerala holidays, houseboat experiences and travel planning.'}:pages.find(row=>row.Path===currentPath);
     document.title=isLogin?(adminView||'Sign in'):(page?[page.Title,brand].filter(Boolean).join(' | '):'Website');
     let meta=document.querySelector('meta[name="description"]');
     if(!meta){meta=document.createElement('meta');meta.name='description';document.head.append(meta);}
@@ -68,7 +81,7 @@ function App(){
       {isDashboard?<button className="ml-auto md:hidden" aria-label="Open admin menu" onClick={()=>document.getElementById('mobile-admin-menu')?.showModal()}><Menu/></button>:<><nav id="public-navigation" aria-label={menuLabel||'Navigation'} className={menu?'nav open':'nav'}><NavLinks location="Header" onNavigate={()=>setMenu(false)}/></nav><div className="header-actions">{currency&&<span><Globe size={17}/>{currency}</span>}{tripForm&&tripTitle&&<button aria-label={tripTitle} onClick={()=>setPlanner(true)}><UserCircle size={19}/></button>}<NavLinks location="Header actions"/></div><button aria-controls="public-navigation" className="mobile-toggle" aria-label={menuLabel||'Navigation'} aria-expanded={menu} onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button></>}
     </header>
     {!isLogin&&error&&<div role="status" className="bg-amber-50 px-5 py-3 text-sm">Live updates are unavailable. Showing the last loaded sheet content. <button className="underline" onClick={refresh}>Retry</button></div>}
-    {isLogin?<Login showDashboard={isDashboard} adminView={adminView}/>:<><CmsPageFrame path={currentPath}/><Footer onPlan={()=>setPlanner(true)}/>{currentPath==='/'&&<Welcome/>}</>}
+    {isLogin?<Login showDashboard={isDashboard} adminView={adminView}/>:<>{['/about/','/about-us/'].includes(currentPath)?<AboutUs/>:<CmsPageFrame path={currentPath}/>}<Footer onPlan={()=>setPlanner(true)}/>{currentPath==='/'&&<Welcome/>}</>}
     {!isLogin&&whatsappNumber&&whatsappMessage&&<a className="fixed bottom-5 right-5 z-30 grid size-14 place-items-center rounded-full bg-[#12753c] text-white shadow-lg" href={whatsappUrl(whatsappMessage,whatsappNumber)} aria-label={whatsappLabel||'WhatsApp'} target="_blank" rel="noopener noreferrer"><MessageCircle/></a>}
     {planner&&<Dialog title={tripTitle} onClose={()=>setPlanner(false)}><CmsForm formKey={tripForm}/></Dialog>}
   </>;
