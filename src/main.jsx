@@ -39,6 +39,11 @@ function NavLinks({location,onNavigate,loginOnly=false}){
       rows.splice(servicesIndex>=0?servicesIndex:rows.length,0,about);
     }
   }
+  if(location==='Header'){
+    const contactRows=rows.filter(row=>/^\/contact\/?(?:[?#]|$)/.test(row.Link));
+    for(const contact of contactRows)rows.splice(rows.indexOf(contact),1);
+    rows.push(...contactRows.map(row=>({...row,Group:''})));
+  }
   const seen=new Set();
   const link=row=><a key={row.ID} className={location==='Header actions'?(loginOnly?'header-login':'pill'):undefined} href={safeUrl(row.Link)} target={row.Target==='_blank'?'_blank':undefined} rel={row.Target==='_blank'?'noopener noreferrer':undefined} aria-current={row.Link===currentPath?'page':undefined} onClick={event=>{const details=event.currentTarget.closest('details');if(details)details.open=false;onNavigate?.();}}>{location==='Header actions'&&(loginOnly?<LogIn size={16}/>:<MessageCircle size={17}/>)}{row.Label}</a>;
   return rows.map(row=>{const group=row.Group;if(!group)return link(row);if(seen.has(group))return null;seen.add(group);return <details className="pages-dropdown relative" key={group}><summary>{group}<ChevronDown size={13}/></summary><div>{rows.filter(row=>row.Group===group).map(link)}</div></details>;});
