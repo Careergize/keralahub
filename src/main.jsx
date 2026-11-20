@@ -73,7 +73,7 @@ function App(){
   const brand=useSetting('brandName'),currency=useSetting('currency'),whatsappNumber=useSetting('whatsappNumber'),whatsappMessage=useSetting('whatsappMessage'),whatsappLabel=useSetting('ui.whatsapp'),menuLabel=useSetting('ui.menu'),tripTitle=useSetting('ui.enquiryTitle'),tripForm=useSetting('tripFormKey');
   const [menu,setMenu]=useState(false),[planner,setPlanner]=useState(false);
   useEffect(()=>{
-    const page=['/about/','/about-us/'].includes(currentPath)?{Title:'About Us',Description:'Meet Jishnu, founder of Kerala Hub Holidays. Discover our personal approach to Kerala holidays, houseboat experiences and travel planning.'}:pages.find(row=>row.Path===currentPath);
+    const page=['/about/','/about-us/'].includes(currentPath)?{Title:'About Us',Description:'Meet Jishnu K P, founder of Kerala Hub Holidays. Discover our personal approach to Kerala holidays, houseboat experiences and travel planning.'}:pages.find(row=>row.Path===currentPath);
     document.title=isLogin?(adminView||'Sign in'):(page?[page.Title,brand].filter(Boolean).join(' | '):'Website');
     let meta=document.querySelector('meta[name="description"]');
     if(!meta){meta=document.createElement('meta');meta.name='description';document.head.append(meta);}
