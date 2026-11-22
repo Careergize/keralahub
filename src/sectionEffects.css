@@ -1,0 +1,16 @@
+/* Glass highlights and entrance timing adapted from the supplied reference. */
+.public-site :is(.selling-tour,.testimonial-card,.journal){position:relative;border:1px solid rgba(72,118,54,.16);background:linear-gradient(102deg,rgba(255,255,255,.97),rgba(248,249,243,.88) 62%,rgba(255,255,255,.96));box-shadow:0 2px 4px rgba(48,76,39,.10),inset 0 1px 0 rgba(255,255,255,.54);}
+.public-site :is(.selling-tour .tour-photo,.discovery-place,.destination){position:relative;isolation:isolate;}
+.public-site :is(.selling-tour .tour-photo,.discovery-place,.destination)::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(102deg,rgba(255,255,255,.10),transparent 28%,rgba(255,255,255,.08) 62%,transparent 88%),radial-gradient(ellipse 85% 34% at 54% 7%,rgba(255,255,255,.24),transparent 72%);}
+@keyframes travel-heading-reveal{from{opacity:0;translate:0 .52em;clip-path:inset(0 0 56% 0);}to{opacity:1;translate:0 0;clip-path:inset(-8% -2% -8% -2%);}}
+@keyframes travel-card-establish{from{opacity:.52;translate:0 10px;scale:.985;}to{opacity:1;translate:0 0;scale:1;}}
+@keyframes travel-support-reveal{from{opacity:0;translate:0 8px;}to{opacity:1;translate:0 0;}}
+@keyframes travel-control-settle{from{opacity:0;translate:0 6px;scale:.975;}to{opacity:1;translate:0 0;scale:1;}}
+@media(prefers-reduced-motion:no-preference){
+  .public-site .travel-heading-enter{animation:travel-heading-reveal .84s cubic-bezier(.16,1,.3,1) .08s both;}
+  .public-site .travel-card-enter{animation:travel-card-establish .76s cubic-bezier(.16,1,.3,1) var(--travel-delay,0s) both;}
+  .public-site .travel-card-enter :is(h3,.selling-tour-route,.testimonial-footer){animation:travel-support-reveal .62s cubic-bezier(.22,1,.36,1) calc(var(--travel-delay,0s) + .14s) both;}
+  .public-site .travel-card-enter .pill{animation:travel-control-settle .52s cubic-bezier(.16,1,.3,1) calc(var(--travel-delay,0s) + .40s) both;}
+}
+@media(max-width:767px){.public-site .travel-card-enter{--travel-delay:0s!important;}}
+@media(prefers-reduced-motion:reduce){.public-site :is(.travel-heading-enter,.travel-card-enter),.public-site .travel-card-enter :is(h3,.selling-tour-route,.testimonial-footer,.pill){animation:none;}}
