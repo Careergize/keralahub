@@ -1,4 +1,7 @@
 import {invoiceDocument} from './invoiceDocument';
+import InvoiceEditor from './InvoiceEditor';
+import {readInvoiceItems,writeInvoiceItems,invoiceItemsTotal} from './invoiceItems';
+import {writeTravelDates} from './invoiceTravelDates';
 import {useEffect, useState} from 'react';
 import {adminApi, sessionKey} from './adminApi';
 import cmsSchema from './cmsSchema.json';
@@ -41,6 +44,30 @@ export default function AdminRecords({view}) {
     const values = {...editing, ...Object.fromEntries(new FormData(event.currentTarget))};
     if (editing.ID) values.ID = editing.ID;
     try {
+      if(view==='Invoices'){
+        const from=values.__travelFrom||'',to=values.__travelTo||'';
+        if(from||to||Object.prototype.hasOwnProperty.call(editing,'__travelFrom')||Object.prototype.hasOwnProperty.call(editing,'__travelTo'))values['Travel dates']=writeTravelDates(from,to);
+        delete values.__travelFrom;
+        delete values.__travelTo;
+        const stored=readInvoiceItems(editing.Description);
+        const items=values.__tripItems??stored.items;
+        values.Description=writeInvoiceItems(values.Description,items);
+        if(items.length)values.Amount=invoiceItemsTotal(items).toFixed(2);
+        delete values.__tripItems;
+        if(values.Description.length>10000)throw new Error('Please shorten the invoice description or trip details.');
+      }
+      if(view==='Invoices'&&values.__customerMode==='manual'){
+        const customerValues={Name:String(values.__customerName||'').trim(),Email:String(values.__customerEmail||'').trim(),Phone:String(values.__customerPhone||'').trim()};
+        if(!customerValues.Name)throw new Error('Enter the customer’s name.');
+        const result=await adminApi('saveRecord',{token,table:'Customers',values:customerValues});
+        if(!result?.id)throw new Error('The customer could not be linked. Please try again.');
+        values['Customer ID']=result.id;
+        values.__customerMode='existing';
+        setCustomers(previous=>[...previous,[result.id,customerValues.Name,customerValues.Email,customerValues.Phone]]);
+        // Keep the saved customer on retry if saving the invoice fails.
+        setEditing(previous=>({...previous,'Customer ID':result.id,__customerMode:'existing'}));
+      }
+      for(const key of Object.keys(values))if(key.startsWith('__customer'))delete values[key];
       await adminApi('saveRecord', {token, table:view, values});
       window.dispatchEvent(new Event('kerala-content-changed'));
       setEditing(null); setRevision(n => n + 1);
@@ -83,8 +110,8 @@ export default function AdminRecords({view}) {
     {data?.columns && <>
       {cms&&<p className="my-4 rounded-xl bg-white p-4 text-sm">Only Published records appear publicly. Sort order controls display order. Changes appear within 30 seconds or on refresh.{view==='Pages'&&' All public pages use PageSections. Paths use leading and trailing slashes, such as /about-us/.'}{view==='PageSections'&&' Page is the page path. Type controls the layout. Cards, Gallery and FAQ use Media rows whose Group matches this section Key. Override is legacy and not rendered.'}{view==='FormFields'&&' Form is the form Key. Select Options are separated with |. The name, email, destination and message fields must remain published for the form to work.'}{view==='Navigation'&&' Location selects the menu. Group creates a submenu. Links to unpublished pages are hidden automatically.'}{view==='Media'&&' Group matches a Cards, Gallery or FAQ section Key. Use credits for reusable image attribution.'}</p>}
       <div className="admin-toolbar"><label className="admin-search">Search records<input type="search" className="rounded-lg border bg-white p-2" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search records…"/></label>
-      <button className="pill admin-new-record" disabled={busy} onClick={() => setEditing(view==='Enquiries'?{Status:'New'}:{})}>+ New record</button></div>
-      {editing && <form className="admin-editor admin-record-editor" onSubmit={save} aria-label={editing.ID?'Edit record':'New record'}>
+      <button className="pill admin-new-record" disabled={busy||Boolean(editing)} onClick={() => setEditing(view==='Enquiries'?{Status:'New'}:view==='Invoices'?{Date:new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()),Paid:'0'}:{})}>{view==='Invoices'?'+ Create invoice':'+ New record'}</button></div>
+      {editing && (view==='Invoices'?<InvoiceEditor record={editing} onChange={setEditing} customers={customers} busy={busy} onSave={save} onCancel={()=>setEditing(null)}/>:<form className="admin-editor admin-record-editor" onSubmit={save} aria-label={editing.ID?'Edit record':'New record'}>
         <h2>{editing.ID ? 'Edit record' : 'New record'}</h2>
         {data.columns.filter(key => !['ID','Balance','Created','Submission ID'].includes(key)).map(key => {
           const required = (cms?['Status']:['Name','Customer ID','Service','Status','Date','Description','Amount','Paid']).includes(key);
@@ -100,7 +127,7 @@ export default function AdminRecords({view}) {
           </label>;
         })}
         <div className="admin-editor-actions flex gap-3"><button className="pill" disabled={busy}>{busy ? 'Saving…' : 'Save'}</button><button type="button" disabled={busy} onClick={() => setEditing(null)}>Cancel</button></div>
-      </form>}
+      </form>)}
       {view==='Enquiries'?<>
         <div className="enquiry-tabs" role="group" aria-label="Filter enquiries by status">{['All','New','Processing','Pending'].map(status=><button key={status} type="button" aria-pressed={enquiryTab===status} onClick={()=>setEnquiryTab(status)}>{status}<span>{enquiryRows.filter(record=>status==='All'||enquiryStatus(record.Status)===status).length}</span></button>)}</div>
         {!visibleEnquiries.length?<p className="admin-empty">No enquiries match this view.</p>:<div className="enquiry-cards">{visibleEnquiries.map(record=>{const customer=customers.find(c=>c[0]===record['Customer ID']);return <article className="enquiry-card" key={record.ID}><div className="enquiry-card-top"><div><h3>{customer?.[1]||record['Customer ID']}</h3><p className="enquiry-reference">{record.ID}</p></div><span className={'enquiry-badge enquiry-badge-'+enquiryStatus(record.Status).toLowerCase()}>{enquiryStatus(record.Status)}</span></div><p className="enquiry-contact">{customer?.slice(2).filter(Boolean).join(' · ')}</p><h4>{record.Destination||record.Service||'Travel enquiry'}</h4>{record.Created&&<p className="enquiry-reference">Received: {record.Created}</p>}<details className="enquiry-details"><summary>View enquiry details</summary><p>{record.Message||'No message provided.'}</p>{record.Service&&<p>Source: {record.Service}</p>}</details><div className="enquiry-card-actions"><label>Status<select value={enquiryStatus(record.Status)} disabled={busy} onChange={e=>changeEnquiryStatus(record,e.target.value)}>{statuses.Enquiries.map(status=><option key={status}>{status}</option>)}</select></label><button type="button" className="underline" disabled={busy} onClick={()=>setEditing({...record,Status:enquiryStatus(record.Status)})}>Edit</button><button type="button" className="text-red-700 underline" disabled={busy} onClick={()=>remove(data.rows.find(row=>row[0]===record.ID))}>Delete</button></div></article>;})}</div>}
