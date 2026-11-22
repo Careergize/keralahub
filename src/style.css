@@ -277,3 +277,11 @@
 .loading-progress span {display:block;height:100%;width:45%;border-radius:inherit;background:#487636;animation:journey-loading 1.6s ease-in-out infinite;}
 @keyframes journey-loading {0%{transform:translateX(-110%);}100%{transform:translateX(330%);}}
 @media(prefers-reduced-motion:reduce){.loading-progress span {animation:none;margin:auto;}}
+
+/* Keep welcome content scrollable without a visible scrollbar. */
+.welcome-popup {scrollbar-width:none;-ms-overflow-style:none;}
+.welcome-popup::-webkit-scrollbar {display:none;}
+/* Hide popup scrollbars while preserving touch, wheel and keyboard scrolling. */
+dialog {scrollbar-width:none;-ms-overflow-style:none;}
+dialog::-webkit-scrollbar {display:none;}
+html:has(dialog[open]),body:has(dialog[open]) {overflow:hidden;}

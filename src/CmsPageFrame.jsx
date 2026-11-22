@@ -1,3 +1,5 @@
+import HomeDiscovery from './HomeDiscovery';
+import {searchTravelRows} from './travelSearch';
 import HouseboatHero from './HouseboatHero';
 import ContactSection from './ContactSection';
 import TestimonialsSection from './TestimonialsSection';
@@ -5,7 +7,7 @@ import BestSellingTours from './BestSellingTours';
 import HeaderSearch from './HeaderSearch';
 import ExploreSection from './ExploreSection';
 import React,{useState,useEffect,useRef} from 'react';
-import {ArrowRight,Search,X,BadgeDollarSign,ShieldCheck,Map,Headset,TrainFront,Ship} from 'lucide-react';
+import {Compass,ArrowRight,Search,X,BadgeDollarSign,ShieldCheck,Map,Headset,TrainFront,Ship} from 'lucide-react';
 import {useCollection,useSetting,safeUrl,mediaUrl} from './siteContent';
 import {pageSections} from './contentModel';
 import {useSiteContent} from './siteContent';
@@ -80,13 +82,13 @@ export default function CmsPageFrame({path}){
   const onOpen=(collection,id)=>setSelected({kind:'detail',collection,id});
   const onEnquire=(collection,id,travelDate='')=>setSelected({kind:'enquiry',collection,id,travelDate});
   const formKey=selected?.collection==='Vehicles'?formRental:['Tours','Experiences'].includes(selected?.collection)?formTrip:formContact;
-  const searchRows=search?(collections[search.collection]||[]).filter(row=>(!search.destination||(row.Places||'').split(',').map(s=>s.trim()).includes(search.destination))&&(!search.category||row.Category===search.category)):[];
+  const searchRows=search?searchTravelRows(collections[search.collection]||[],search):[];
   return <main>
     {!sections.some(section=>section.Type==='Hero')&&<section className="wrap section"><h1 className="text-4xl font-semibold">{page.Title}</h1>{page.Description&&<p>{page.Description}</p>}</section>}
-    {sections.filter(section=>!(path==='/houseboat-cruising/'&&section.Type==='Form'&&sections.some(row=>row.Type==='Hero'))).map(section=>path==='/houseboat-cruising/'&&section.Type==='Hero'?<HouseboatHero key={section.ID} section={section} formSection={sections.find(row=>row.Type==='Form')}/>:<SheetSection key={section.ID} section={section} onOpen={onOpen} onEnquire={onEnquire} onImage={id=>setSelected({kind:'image',id})} onSearch={setSearch}/>)}
+    {sections.filter(section=>!(path==='/houseboat-cruising/'&&section.Type==='Form'&&sections.some(row=>row.Type==='Hero'))).map(section=>path==='/houseboat-cruising/'&&section.Type==='Hero'?<HouseboatHero key={section.ID} section={section} formSection={sections.find(row=>row.Type==='Form')}/>:<React.Fragment key={section.ID}><SheetSection section={section} onOpen={onOpen} onEnquire={onEnquire} onImage={id=>setSelected({kind:'image',id})} onSearch={setSearch}/>{path==='/'&&section.Type==='Search'&&<HomeDiscovery onSearch={setSearch}/>}</React.Fragment>)}
     {selected&&selectedRow&&<Dialog title={selectedRow.Title||selectedRow.Name||selectedRow.Country||''} onClose={()=>setSelected(null)}>
       {selected.kind==='image'?<><SheetImage url={selectedRow['Image URL']} alt={selectedRow.Alt} className="w-full rounded-xl"/><Credit image={selectedRow}/></>:selected.kind==='enquiry'?<CmsForm formKey={formKey} initial={{'travel-date':selected.travelDate||'',destination:selectedRow.Location||(selectedRow.Places||'').split(',')[0]||selectedRow.Country||'',message:selectedRow.Title||selectedRow.Name||selectedRow.Country||''}} context={selectedRow.Title||selectedRow.Name||selectedRow.Country||''}/>:<><SheetImage url={selectedRow['Image URL']} alt={selectedRow.Title} className="w-full rounded-xl"/>{selectedRow.Description&&<p className="my-5 whitespace-pre-wrap">{selectedRow.Description}</p>}{forms.some(form=>form.Key===formKey)&&enquireLabel&&<button className="pill" onClick={()=>setSelected({...selected,kind:'enquiry'})}>{enquireLabel}</button>}</>}
     </Dialog>}
-    {search&&<Dialog title={searchTitle} onClose={()=>setSearch(null)}><div className="cards">{searchRows.map(row=><article key={row.ID} className="tour p-5"><h3>{row.Title}</h3>{row.Description&&<p className="my-3">{row.Description}</p>}{enquireLabel&&<button className="pill" onClick={()=>{onEnquire(search.collection,row.ID,search.travelDate);setSearch(null);}}>{enquireLabel}</button>}</article>)}</div></Dialog>}
+    {search&&<Dialog title={searchTitle||'Find your next getaway'} onClose={()=>setSearch(null)}><div className="travel-results"><p className="results-context">{searchRows.length} {search.collection==='Hotels'?'stays':search.collection==='Experiences'?'experiences':'trips'} {search.destination?'in '+search.destination:'to explore'}{search.travelDate?' · Preferred date: '+search.travelDate:''}</p><p className="results-disclaimer">Enquire for pricing and availability on your preferred dates.</p>{searchRows.length?<div className="result-list">{searchRows.map(row=><article key={row.ID} className="result-card">{mediaUrl(row['Image URL'])&&<SheetImage url={row['Image URL']} alt={row.Title||row.Name||''} loading="lazy"/>}<div><h3>{row.Title||row.Name||row.Country}</h3><p>{row.Location||row.Places||row.Region}</p>{row.Description&&<p className="result-description">{row.Description}</p>}<button className="pill" onClick={()=>{onEnquire(search.collection,row.ID,search.travelDate);setSearch(null);}}>{enquireLabel||'Enquire now'}</button></div></article>)}</div>:<div className="results-empty"><Compass size={32}/><h3>Let’s plan something just for you</h3><p>No matching listings right now. Tell us your preferences and our team can help build your trip.</p><a className="pill" href="/customize-trip/">Customize your trip</a><button type="button" className="outline" onClick={()=>setSearch({...search,destination:'',category:''})}>Explore all options</button></div>}</div></Dialog>}
   </main>;
 }

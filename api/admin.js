@@ -1,4 +1,4 @@
-const defaultUrl = 'https://script.google.com/macros/s/AKfycbzcfRMFpUjbjHfoLCua_iSczW5iYBnEm56Ia0u0sHF5anyJSBiJLHGKfWkiSuNosY9l7g/exec';
+const defaultUrl = 'https://script.google.com/macros/s/AKfycbwDIx_B8aklQ773xwOol5_f7lcWP1hjsvjfE1O9obfjNXG6_Kb6FdnHjzH6BxGKporPyw/exec';
 
 function createHandler(configuredUrl) {
 return async function handler(req, res) {

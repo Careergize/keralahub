@@ -24,6 +24,7 @@ export default function OffersCarousel({section,onEnquire}){
   return <section className="wrap pt-14 md:pt-20" id={section.Key} aria-labelledby={section.Title?headingId:undefined}>
     {section.Title&&<h2 id={headingId} className="mb-5 text-center">{section.Title}</h2>}
     {section.Body&&<p className="mb-5 text-center whitespace-pre-wrap">{section.Body}</p>}
+    <div className="mb-7 flex justify-center"><a className="pill" href="/customize-trip/">Customize your trip</a></div>
     <div className="relative">
       {offers.length>1&&<div className="pointer-events-none absolute inset-x-1 top-1/2 z-10 flex -translate-y-1/2 justify-between md:-inset-x-4">
         <button type="button" aria-label={previousLabel||'Previous offer'} onClick={()=>move(-1)} className="pointer-events-auto grid size-10 place-items-center rounded-full border border-neutral-200 bg-white shadow-md hover:text-brand"><ChevronLeft size={19}/></button>
