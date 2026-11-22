@@ -10,3 +10,18 @@
 .public-site .site-header .brand:focus-visible{outline-offset:5px;}
 @media(max-width:1100px){.public-site .site-header .brand img{width:180px;height:56px;}}
 @media(max-width:767px){.public-site .site-header .brand img{width:174px;height:54px;}.public-site .site-header{padding-block:8px;}}
+/* Match navigation and primary actions to the supplied logo green. */
+.public-site{--color-brand:#487636;--color-brand-dark:#304c27;}
+.public-site footer{background:var(--color-brand);}
+.public-site .site-header,.public-site .nav.open,.public-site .site-header .pages-dropdown>div,.public-site .site-header .brand{background:var(--color-brand);}
+.public-site .site-header .pages-dropdown>div{color:white;}
+.public-site .pill,.public-site .site-header .pill,.public-site .hero-button,.public-site .finder>button,.public-site .selling-tour .tour-bottom>.pill,.public-site .newsletter .pill,.public-site .trip-summary .pill{background:var(--color-brand);color:white;}
+.public-site .site-header .pill{border:1px solid #ffffff80;}
+.public-site .pill:hover,.public-site .site-header .pill:hover,.public-site .hero-button:hover,.public-site .finder>button:hover,.public-site .selling-tour .tour-bottom>.pill:hover,.public-site .newsletter .pill:hover,.public-site .trip-summary .pill:hover{background:var(--color-brand-dark);color:white;}
+.public-site .selling-categories button[aria-pressed=true]{background:var(--color-brand);border-color:var(--color-brand);color:white;}
+.public-site .selling-categories button:hover{border-color:var(--color-brand);}
+/* Keep frequently used controls and listing information easy to read. */
+.public-site .search-tabs .tab,.public-site .finder>button,.public-site .selling-categories button,.public-site .collection-controls select,.public-site .saved-filter,.public-site .collection-controls>span,.public-site .selling-tour-route,.public-site .selling-tour .meta,.public-site .selling-tour .tour-bottom>.pill{font-size:14px;}
+.public-site .result-card p,.public-site .result-card .pill,.public-site .search-note{font-size:14px;}
+.public-site .search-tabs .tab{min-height:42px;}.public-site .selling-categories button,.public-site .saved-filter,.public-site .collection-controls select{min-height:40px;}
+@media(max-width:767px){.public-site .search-tabs .tab{font-size:13px;padding:8px 9px;}.public-site .collection-controls{align-items:start;}.public-site .collection-controls>div{flex-wrap:wrap;}.public-site .search-note{font-size:13px;}}
