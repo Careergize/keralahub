@@ -67,7 +67,7 @@ export default function AdminRecords({view}) {
         delete values.__tripItems;
         if(values.Description.length>10000)throw new Error('Please shorten the invoice description or trip details.');
       }
-      if(view==='Invoices'&&values.__customerMode==='manual'){
+      if(['Invoices','Quotations'].includes(view)&&values.__customerMode==='manual'){
         const customerValues={Name:String(values.__customerName||'').trim(),Email:String(values.__customerEmail||'').trim(),Phone:String(values.__customerPhone||'').trim()};
         if(!customerValues.Name)throw new Error('Enter the customer’s name.');
         const result=await adminApi('saveRecord',{token,table:'Customers',values:customerValues});
@@ -75,7 +75,7 @@ export default function AdminRecords({view}) {
         values['Customer ID']=result.id;
         values.__customerMode='existing';
         setCustomers(previous=>[...previous,[result.id,customerValues.Name,customerValues.Email,customerValues.Phone]]);
-        // Keep the saved customer on retry if saving the invoice fails.
+        // Keep the saved customer on retry if saving the document fails.
         setEditing(previous=>({...previous,'Customer ID':result.id,__customerMode:'existing'}));
       }
       for(const key of Object.keys(values))if(key.startsWith('__customer'))delete values[key];
