@@ -1,11 +1,13 @@
-import React,{useId,useState} from 'react';
+import React,{useEffect,useId,useRef,useState} from 'react';
 import {Check,ChevronDown,MapPin} from 'lucide-react';
 
 export default function DestinationPicker({value,onChange,destinations}){
   const id=useId();
+  const list=useRef(null);
   const [open,setOpen]=useState(false),[searching,setSearching]=useState(false),[active,setActive]=useState(-1);
   const names=[...new Set(destinations.map(d=>d.Name).filter(Boolean))];
   const options=names.filter(name=>!searching||name.toLowerCase().includes(value.trim().toLowerCase()));
+  useEffect(()=>{if(open&&active>=0)list.current?.children[active]?.scrollIntoView({block:'nearest'});},[open,active]);
   const choose=name=>{onChange(name);setOpen(false);setSearching(false);setActive(-1);};
   return <div className="trip-destination" onBlur={e=>{if(!e.currentTarget.contains(e.relatedTarget)){setOpen(false);setActive(-1);}}}>
     <label htmlFor={id}>Destination</label>
@@ -20,7 +22,7 @@ export default function DestinationPicker({value,onChange,destinations}){
     </div>
     {open&&<div className="trip-destination-menu">
       <p className="trip-destination-hint">{searching?'Matching destinations':'Explore destinations'}</p>
-      <ul id={`${id}-options`} role="listbox" aria-label="Destinations">
+      <ul ref={list} id={`${id}-options`} role="listbox" aria-label="Destinations">
         {options.map((name,i)=><li id={`${id}-option-${i}`} key={name} role="option" aria-selected={value===name} className={active===i?'is-active':''} onPointerDown={e=>e.preventDefault()} onClick={()=>choose(name)}><MapPin size={17} aria-hidden="true"/><span>{name}</span>{value===name&&<Check size={18} aria-hidden="true"/>}</li>)}
       </ul>
       {!options.length&&<p className="trip-destination-empty">No matches. Keep “{value}” as your destination.</p>}
